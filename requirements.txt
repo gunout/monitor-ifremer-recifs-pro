@@ -1,0 +1,13 @@
+rasterio==1.5.2
+numpy==2.5.3
+pandas==3.0.6
+scipy==1.18.1
+geopandas==1.2.0
+shapely==2.1.2
+pyproj==3.8.0
+pyogrio==0.13.0
+matplotlib==3.11.2
+scikit-image==0.26.0
+Pillow==12.3.0
+tifffile==2026.9.20
+affine==3.0.1

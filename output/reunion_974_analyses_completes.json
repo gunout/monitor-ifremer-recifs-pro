@@ -1,0 +1,538 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "date_creation": "2026-10-05T10:18:07.072535",
+    "source": "data.gouv.fr",
+    "organisation": "IFREMER",
+    "projets": [
+      "Spectrhabent-OI",
+      "HYSCORES"
+    ],
+    "zone": "Côte ouest de La Réunion",
+    "nb_datasets": 13,
+    "annees_couvertes": [
+      2009,
+      2015
+    ],
+    "licence": "notspecified"
+  },
+  "datasets": [
+    {
+      "id": "6756b806d6f163559eab27d9",
+      "titre": "Indice agrégé de la VCH en 2015 sur les zones récifales de la côte ouest de l'île de La Réunion.",
+      "url": "https://www.data.gouv.fr/datasets/indice-agrege-de-la-vch-en-2015-sur-les-zones-recifales-de-la-cote-ouest-de-lile-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T23:59:24.092000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-de-simulation, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral, imagerie-imagerie-aerienne-imagerie-numerique",
+      "description": "Cette représentation de la Vitalité Corallienne Hyperspectrale (VCH) permet de représenter la valeur moyenne de VCH caractérisant une bande de 20m de large comprise entre le trait de côte et le front récifal (intégrant toute la largeur de la plateforme récifale). Elle permet d'ap",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "000000000628eee9",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b7fcd6f163559eab27c0",
+      "titre": "Différentiels 2009-2015 de la répartition des \"Entités Coralliennes\" sur les plateformes récifales de la côte ouest de l'île de La Réunion. [RASTER]",
+      "url": "https://www.data.gouv.fr/datasets/differentiels-2009-2015-de-la-repartition-des-entites-coralliennes-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion-raster",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T22:26:05.254000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-combinees, donnees-ouvertes, entites-coralliennes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral",
+      "description": "Les \"entités coralliennes\" constituent un indicateur spatialisé issu des données de couverture corallienne à haute résolution spatiale (40 cm) obtenues à partir du traitement des images hyperspectrales acquises en Mai 2015 (Projet HYSCORES : Ifremer/UBO/Office de l'eau Réunion) a",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "00000000b7803a25",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b889d6f163559eab28e6",
+      "titre": "Evolution comparative 2009-2015 de la répartition des entités coralliennes sur les plateformes récifales de la côte ouest de l'île de La Réunion. [POLYLIGNE]",
+      "url": "https://www.data.gouv.fr/datasets/evolution-comparative-2009-2015-de-la-repartition-des-entites-coralliennes-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion-polyligne",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T15:20:39.113000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-combinees, donnees-de-simulation, donnees-ouvertes, entites-coralliennes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes",
+      "description": "Les \"entités coralliennes\" constituent un indicateur spatialisé issu des données de couverture corallienne à haute résolution spatiale (40 cm) obtenues à partir du traitement des images hyperspectrales acquises en Mai 2015 (Projet HYSCORES : Ifremer/UBO/Office de l'eau Réunion) a",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "00000000bbdac879",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b82dd6f163559eab2834",
+      "titre": "Différentiels 2009-2015 de la VCH (Vitalité Corallienne Hyperspectrale) sur les plateformes récifales de la côte ouest de l'île de La Réunion (2015).",
+      "url": "https://www.data.gouv.fr/datasets/differentiels-2009-2015-de-la-vch-vitalite-corallienne-hyperspectrale-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion-2015",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T15:04:08.976000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-de-simulation, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral, imagerie-imagerie-aerienne-imagerie-numerique",
+      "description": "Cette représentation agrégée de la VCH permet de représenter  les différences observées entre 2009 et 2015 dans les valeurs moyennes de vitalité corallienne hyperspectrale caractérisant une bande de 20m de large comprise entre le trait de côte et le front récifal (intégrant toute",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "00000000a52f595b",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b831d6f163559eab283d",
+      "titre": "Répartition des \"Entités Coralliennes\" (vecteur) en 2009 sur les plateformes récifales de la côte ouest de l'île de La Réunion.",
+      "url": "https://www.data.gouv.fr/datasets/repartition-des-entites-coralliennes-vecteur-en-2009-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T14:28:46.732000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-combinees, donnees-ouvertes, entites-coralliennes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral",
+      "description": "Les \"entités coralliennes\" constituent un indicateur spatialisé issu des données de couverture corallienne à haute résolution spatiale (40 cm) obtenues à partir du traitement des images hyperspectrales acquises en Mai 2015 (Projet HYSCORES : Ifremer/UBO/Office de l'eau Réunion) a",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "000000007b29460b",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b820d6f163559eab2816",
+      "titre": "Répartition des \"Entités Coralliennes\" (raster) en 2015 sur les plateformes récifales de la côte ouest de l'île de La Réunion.",
+      "url": "https://www.data.gouv.fr/datasets/repartition-des-entites-coralliennes-raster-en-2015-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T14:21:43.104000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-combinees, donnees-ouvertes, entites-coralliennes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral",
+      "description": "Les \"entités coralliennes\" constituent un indicateur spatialisé issu des données de couverture corallienne à haute résolution spatiale (40 cm) obtenues à partir du traitement des images hyperspectrales acquises en Mai 2015 (Projet HYSCORES : Ifremer/UBO/Office de l'eau Réunion) a",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "000000003110c39a",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b8b1d6f163559eab292b",
+      "titre": "Répartition des \"Entités Coralliennes\" (raster) en 2009 sur les plateformes récifales de la côte ouest de l'île de La Réunion.",
+      "url": "https://www.data.gouv.fr/datasets/repartition-des-entites-coralliennes-raster-en-2009-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T11:59:48.587000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-combinees, donnees-ouvertes, entites-coralliennes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral",
+      "description": "Les \"entités coralliennes\" constituent un indicateur spatialisé issu des données de couverture corallienne à haute résolution spatiale (40 cm) obtenues à partir du traitement des images hyperspectrales acquises en Mai 2015 (Projet HYSCORES : Ifremer/UBO/OLE) ainsi qu'en 2009-2010",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "000000003c9fcf83",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b7f7d6f163559eab27b8",
+      "titre": "Répartition des \"Entités Coralliennes\" (vecteur) en 2015 sur les plateformes récifales de la côte ouest de l'île de La Réunion.",
+      "url": "https://www.data.gouv.fr/datasets/repartition-des-entites-coralliennes-vecteur-en-2015-sur-les-plateformes-recifales-de-la-cote-ouest-de-lile-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-25T06:23:15.528000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-combinees, donnees-ouvertes, entites-coralliennes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral",
+      "description": "Les \"entités coralliennes\" constituent un indicateur spatialisé issu des données de couverture corallienne à haute résolution spatiale (40 cm) obtenues à partir du traitement des images hyperspectrales acquises en Mai 2015 (Projet HYSCORES : Ifremer/UBO/OLE) ainsi qu'en 2009-2010",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "0000000086089d67",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b833d6f163559eab2841",
+      "titre": "Vitalité corallienne hyperspectrale 2009 - côte ouest de La Réunion",
+      "url": "https://www.data.gouv.fr/datasets/vitalite-corallienne-hyperspectrale-2009-cote-ouest-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-24T15:44:21.938000+00:00",
+      "tags": "acquisition-aerienne, classification, coraux, donnees-dobservation-in-situ, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, hvd, hyperspectral",
+      "description": "Cette image permet de visualiser la \"Vitalité Corallienne Hyperspectrale\" (VCH). Elle est constituée d’une seule bande dont les valeurs sont comprises entre 0 et 100 %. Pour la représentation cartographique, les valeurs de vitalité sont classées en 5 catégories (valeurs de seuil ",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "0000000016262185",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b80ed6f163559eab27ec",
+      "titre": "Indice agrégé de la VCH en 2009 sur les zones récifales de la côte ouest de l'île de La Réunion.",
+      "url": "https://www.data.gouv.fr/datasets/indice-agrege-de-la-vch-en-2009-sur-les-zones-recifales-de-la-cote-ouest-de-lile-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-24T13:52:40.627000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-de-simulation, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral, imagerie-imagerie-aerienne-imagerie-numerique",
+      "description": "Cette représentation de la Vitalité Corallienne Hyperspectrale (VCH) permet de représenter la valeur moyenne de VCH caractérisant une bande de 20m de large comprise entre le trait de côte et le front récifal (intégrant toute la largeur de la plateforme récifale). Elle permet d'ap",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "000000003c7ba248",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b835d6f163559eab2846",
+      "titre": "Indice surfacique de la Vitalité Corallienne Hyperspectrale (VCH) des zones récifales de la côte ouest de l'île de La Réunion (2015).",
+      "url": "https://www.data.gouv.fr/datasets/indice-surfacique-de-la-vitalite-corallienne-hyperspectrale-vch-des-zones-recifales-de-la-cote-ouest-de-lile-de-la-reunion-2015",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-23T16:41:18.233000+00:00",
+      "tags": "acquisitions-aeriennes, coraux, donnees-de-simulation, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-et-biotopes, hyperspectral, imagerie-imagerie-aerienne-imagerie-numerique",
+      "description": "Cette représentation de la Vitalité Corallienne hyperspectrale (VCH) permet de visualiser sur 1 seule bande (0 à 100%) la couverture corallienne vivante ramenée au substrat potentiellement colonisable (Substrat dur) sur les 4 plateformes récifales de La Réunion en Mai 2015. La sy",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "000000000fefb605",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b84dd6f163559eab2877",
+      "titre": "Classification de la nature des fonds (Biologie/Substrats) des plateformes récifales de La Réunion en 2015.",
+      "url": "https://www.data.gouv.fr/datasets/classification-de-la-nature-des-fonds-biologie-substrats-des-plateformes-recifales-de-la-reunion-en-2015",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-09-23T15:36:52.289000+00:00",
+      "tags": "acquisitions-aeriennes, classification, coraux, donnees-combinees, donnees-dobservation, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-benthiques",
+      "description": "La nature des fonds des 4 principales plateformes récifales de La Réunion se décompose en 12 classes regroupant des informations de nature biologique (dominance algue, Corail et herbiers) et relatives au substrat (sable, roche ).\n Ces résultats sont issus du traitement des images",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "00000000bcc88493",
+      "change": "unchanged"
+    },
+    {
+      "id": "6756b82dd6f163559eab2833",
+      "titre": "Nature des fonds : pourcentage de sable, algues, corail, herbier et composition colorée (Sable/Algues/Corail) - côte ouest de La Réunion",
+      "url": "https://www.data.gouv.fr/datasets/nature-des-fonds-pourcentage-de-sable-algues-corail-herbier-et-composition-coloree-sable-algues-corail-cote-ouest-de-la-reunion",
+      "organisation": "Institut français de recherche pour l'exploitation de la mer (IFREMER)",
+      "portail": "France",
+      "pays": "🇫🇷",
+      "type_api": "udata",
+      "last_update": "2026-07-23T09:50:31.268000+00:00",
+      "tags": "acquisition-aerienne, donnees-dobservation-in-situ, donnees-ouvertes, environnement, etat-du-milieu-habitats, fonds-marins, habitats-benthiques, habitats-et-biotopes, hyperspectral, la-reunion",
+      "description": "Cette donnée permet de visualiser les taux de recouvrement des quatre principaux constituants de la plateforme récifale : le Sable, le Corail, les Algues et les Herbiers. Elle permet également de visualiser une synthèse des quatre séries de cartes précédentes. \nL'image est consti",
+      "license": "notspecified",
+      "category": "marin",
+      "hash": "00000000a34bf157",
+      "change": "unchanged"
+    }
+  ],
+  "analyses": {
+    "stack_2009_2015": {
+      "vch_2009_moyen": 57.1,
+      "vch_2009_median": 52.3,
+      "vch_2009_std": 12.4,
+      "vch_2015_moyen": 56.6,
+      "vch_2015_median": 51.5,
+      "vch_2015_std": 12.3,
+      "delta_moyen": -0.52,
+      "delta_median": 0.0,
+      "gain_pct": 24.1,
+      "stable_pct": 49.2,
+      "perte_pct": 26.8,
+      "surface_recifale_km2": 0.09,
+      "pixels_valides": 583041,
+      "distribution_2009": {
+        "mauvais_0_20": 1.0,
+        "mediocre_20_40": 0.9,
+        "moyen_40_60": 71.2,
+        "bon_60_80": 20.0,
+        "tres_bon_80_100": 6.8
+      },
+      "distribution_2015": {
+        "mauvais_0_20": 1.1,
+        "mediocre_20_40": 0.7,
+        "moyen_40_60": 73.6,
+        "bon_60_80": 17.8,
+        "tres_bon_80_100": 6.7
+      }
+    },
+    "vch_2009": {
+      "fichier": "03_vch_2009_brut.tif",
+      "vch_moyen": 61.9,
+      "vch_median": 54.5,
+      "vch_std": 14.4,
+      "vch_min": 50.0,
+      "vch_max": 100.0,
+      "pixels_valides": 581958,
+      "pct_valide": 2.39,
+      "distribution": {
+        "mauvais_0_20": 0.0,
+        "mediocre_20_40": 0.0,
+        "moyen_40_60": 61.2,
+        "bon_60_80": 23.1,
+        "tres_bon_80_100": 15.7
+      }
+    },
+    "classifications": [
+      {
+        "nom": "Saint-Gilles",
+        "fichier": "classification_saint_gilles_2015.tif",
+        "surface_totale_km2": 96.96,
+        "surface_recifale_km2": 2.76,
+        "pct_recif": 2.85,
+        "pixels_total": 606009807,
+        "classes": {
+          "Terre/masque": {
+            "pct": 97.15,
+            "surface_km2": 94.198,
+            "pixels": 588738640
+          },
+          "Algues brunes": {
+            "pct": 0.16,
+            "surface_km2": 0.158,
+            "pixels": 987637
+          },
+          "Algues vertes": {
+            "pct": 0.08,
+            "surface_km2": 0.078,
+            "pixels": 489341
+          },
+          "Algues rouges": {
+            "pct": 0.16,
+            "surface_km2": 0.151,
+            "pixels": 943338
+          },
+          "Corail vivant": {
+            "pct": 1.57,
+            "surface_km2": 1.521,
+            "pixels": 9504836
+          },
+          "Sable": {
+            "pct": 0.3,
+            "surface_km2": 0.287,
+            "pixels": 1795845
+          },
+          "Herbier": {
+            "pct": 0.16,
+            "surface_km2": 0.158,
+            "pixels": 985596
+          },
+          "Débris/Roche": {
+            "pct": 0.36,
+            "surface_km2": 0.354,
+            "pixels": 2211061
+          },
+          "Classe 9": {
+            "pct": 0.02,
+            "surface_km2": 0.015,
+            "pixels": 94154
+          },
+          "Autre 1": {
+            "pct": 0.03,
+            "surface_km2": 0.033,
+            "pixels": 204852
+          }
+        },
+        "corail_vivant": {
+          "pct": 1.57,
+          "surface_km2": 1.521,
+          "pixels": 9504836
+        }
+      },
+      {
+        "nom": "Saint-Leu",
+        "fichier": "classification_saint_leu_2015.tif",
+        "surface_totale_km2": 15.09,
+        "surface_recifale_km2": 0.67,
+        "pct_recif": 4.46,
+        "pixels_total": 94323467,
+        "classes": {
+          "Terre/masque": {
+            "pct": 95.54,
+            "surface_km2": 14.419,
+            "pixels": 90117534
+          },
+          "Algues brunes": {
+            "pct": 0.19,
+            "surface_km2": 0.028,
+            "pixels": 176412
+          },
+          "Algues vertes": {
+            "pct": 0.15,
+            "surface_km2": 0.022,
+            "pixels": 138332
+          },
+          "Algues rouges": {
+            "pct": 0.34,
+            "surface_km2": 0.051,
+            "pixels": 318321
+          },
+          "Corail vivant": {
+            "pct": 2.93,
+            "surface_km2": 0.442,
+            "pixels": 2764663
+          },
+          "Sable": {
+            "pct": 0.37,
+            "surface_km2": 0.056,
+            "pixels": 348636
+          },
+          "Herbier": {
+            "pct": 0.15,
+            "surface_km2": 0.023,
+            "pixels": 143915
+          },
+          "Débris/Roche": {
+            "pct": 0.27,
+            "surface_km2": 0.041,
+            "pixels": 256728
+          },
+          "Autre 1": {
+            "pct": 0.05,
+            "surface_km2": 0.008,
+            "pixels": 50293
+          }
+        },
+        "corail_vivant": {
+          "pct": 2.93,
+          "surface_km2": 0.442,
+          "pixels": 2764663
+        }
+      },
+      {
+        "nom": "Étang-Salé",
+        "fichier": "classification_etang_sale_2015.tif",
+        "surface_totale_km2": 3.14,
+        "surface_recifale_km2": 0.24,
+        "pct_recif": 7.67,
+        "pixels_total": 19597996,
+        "classes": {
+          "Terre/masque": {
+            "pct": 92.33,
+            "surface_km2": 2.895,
+            "pixels": 18095738
+          },
+          "Algues brunes": {
+            "pct": 2.19,
+            "surface_km2": 0.069,
+            "pixels": 428979
+          },
+          "Algues vertes": {
+            "pct": 1.26,
+            "surface_km2": 0.04,
+            "pixels": 247778
+          },
+          "Algues rouges": {
+            "pct": 0.88,
+            "surface_km2": 0.028,
+            "pixels": 172674
+          },
+          "Corail vivant": {
+            "pct": 2.34,
+            "surface_km2": 0.073,
+            "pixels": 459275
+          },
+          "Sable": {
+            "pct": 0.26,
+            "surface_km2": 0.008,
+            "pixels": 51531
+          },
+          "Herbier": {
+            "pct": 0.05,
+            "surface_km2": 0.002,
+            "pixels": 10599
+          },
+          "Débris/Roche": {
+            "pct": 0.52,
+            "surface_km2": 0.016,
+            "pixels": 101816
+          },
+          "Autre 1": {
+            "pct": 0.12,
+            "surface_km2": 0.004,
+            "pixels": 23539
+          },
+          "Autre 2": {
+            "pct": 0.03,
+            "surface_km2": 0.001,
+            "pixels": 5546
+          }
+        },
+        "corail_vivant": {
+          "pct": 2.34,
+          "surface_km2": 0.073,
+          "pixels": 459275
+        }
+      },
+      {
+        "nom": "Saint-Pierre",
+        "fichier": "classification_saint_pierre_2015.tif",
+        "surface_totale_km2": 7.83,
+        "surface_recifale_km2": 0.41,
+        "pct_recif": 5.24,
+        "pixels_total": 48941787,
+        "classes": {
+          "Terre/masque": {
+            "pct": 94.76,
+            "surface_km2": 7.42,
+            "pixels": 46377980
+          },
+          "Algues brunes": {
+            "pct": 1.8,
+            "surface_km2": 0.141,
+            "pixels": 879897
+          },
+          "Algues vertes": {
+            "pct": 0.4,
+            "surface_km2": 0.032,
+            "pixels": 198018
+          },
+          "Algues rouges": {
+            "pct": 0.51,
+            "surface_km2": 0.04,
+            "pixels": 247355
+          },
+          "Corail vivant": {
+            "pct": 1.68,
+            "surface_km2": 0.132,
+            "pixels": 822616
+          },
+          "Sable": {
+            "pct": 0.22,
+            "surface_km2": 0.017,
+            "pixels": 105227
+          },
+          "Herbier": {
+            "pct": 0.13,
+            "surface_km2": 0.01,
+            "pixels": 62433
+          },
+          "Débris/Roche": {
+            "pct": 0.44,
+            "surface_km2": 0.034,
+            "pixels": 213267
+          },
+          "Autre 1": {
+            "pct": 0.06,
+            "surface_km2": 0.004,
+            "pixels": 27909
+          }
+        },
+        "corail_vivant": {
+          "pct": 1.68,
+          "surface_km2": 0.132,
+          "pixels": 822616
+        }
+      }
+    ],
+    "synthese": {
+      "vch_moyen_2009": 57.1,
+      "vch_moyen_2015": 56.6,
+      "delta_vch": -0.52,
+      "tendance": "stable",
+      "surface_totale_recifale_km2": 4.08,
+      "surface_corail_vivant_km2": 2.168,
+      "meilleur_secteur": "Saint-Leu"
+    }
+  }
+}

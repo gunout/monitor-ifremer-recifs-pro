@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔬 Monitor Récif Expert — IFREMER / HYSCORES / La Réunion</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bleu:#000091; --bleu-hi:#1212ff; --bleu-soft:#e3e3fd;
+  --rouge:#E1000F; --rouge-soft:#ffe9e9;
+  --or:#fbbf24; --or-hi:#f59e0b; --or-soft:rgba(251,191,36,.15);
+  --vert:#16a34a; --vert-soft:#dcfce7;
+  --blanc:#fff; --gris-50:#f6f6f6; --gris-100:#eee; --gris-200:#e5e5e5;
+  --gris-500:#929292; --gris-700:#3a3a3a; --gris-900:#1e1e1e;
+  --mono:'SF Mono',Menlo,Consolas,monospace;
+  --sans:'Marianne',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --bg:#f6f6f6; --panel:#fff; --border:#e5e5e5; --text:#1e1e1e; --muted:#929292;
+}
+[data-theme="dark"]{
+  --blanc:#1a1d24; --gris-50:#12141a; --gris-100:#1e2129; --gris-200:#2a2e38;
+  --gris-500:#7a8090; --gris-700:#b8bcc6; --gris-900:#f0f2f5;
+  --bleu-soft:#1e1e4d; --rouge-soft:#3a1a1e; --vert-soft:#1a3a24; --or-soft:rgba(251,191,36,.1);
+  --bg:#12141a; --panel:#1a1d24; --border:#2a2e38; --text:#f0f2f5; --muted:#7a8090;
+}
+html{height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100%;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--gris-100)}
+::-webkit-scrollbar-thumb{background:var(--gris-500);border-radius:4px}
+
+.tricolore{height:6px;background:linear-gradient(to right,#000091 0 33.33%,#fff 33.33% 66.66%,#E1000F 66.66% 100%)}
+.header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--border)}
+.marianne{width:38px;height:38px;border-radius:50%;background:#000091;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;border:2px solid #E1000F;flex-shrink:0}
+.header-txt strong{display:block;color:var(--bleu);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.header-txt span{font-size:11px;color:var(--gris-700)}
+.header-devise{margin-left:auto;font-size:9px;color:var(--gris-500);text-transform:uppercase;letter-spacing:1.2px;text-align:right}
+
+.topbar{background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 16px;gap:12px;position:sticky;top:6px;z-index:100;flex-wrap:wrap}
+.brand{font-size:14px;font-weight:800;color:var(--bleu);display:flex;align-items:center;gap:8px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--vert);box-shadow:0 0 0 3px rgba(22,163,74,.2);animation:pulse 1.8s infinite}
+.brand .dot.offline{background:var(--rouge);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.topbar-right{margin-left:auto;display:flex;gap:12px;font-family:var(--mono);font-size:11px;align-items:center;flex-wrap:wrap}
+.stat{display:flex;gap:5px;color:var(--gris-700);align-items:center;white-space:nowrap}
+.stat .val{color:var(--bleu);font-weight:700;padding:2px 6px;border-radius:3px;background:var(--bleu-soft)}
+.stat .val.vert{color:var(--vert);background:var(--vert-soft)}
+.stat .val.or{color:#8a5e00;background:var(--or-soft)}
+.stat .val.rouge{color:var(--rouge);background:var(--rouge-soft)}
+.theme-toggle{background:var(--panel);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.theme-toggle:hover{background:var(--bleu-soft);border-color:var(--bleu);transform:scale(1.05)}
+.burger-menu{display:none;background:var(--panel);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:16px;align-items:center;justify-content:center}
+
+.app{display:grid;grid-template-columns:290px 1fr 310px;height:calc(100vh - 130px);overflow:hidden}
+.sidebar{background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.sb-head{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--gris-50);flex-shrink:0}
+.sb-title{font-size:12px;font-weight:700;color:var(--bleu);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sb-title::before{content:'';width:4px;height:14px;background:var(--or)}
+.sb-count{font-family:var(--mono);font-size:11px;color:var(--gris-500);margin-top:6px}
+.sb-list{flex:1;overflow-y:auto;padding:8px;min-height:0}
+
+.scenario-item{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--gris-500);border-radius:4px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s}
+.scenario-item:hover{border-color:var(--bleu);background:var(--bleu-soft);transform:translateX(2px)}
+.scenario-item.active{background:var(--bleu-soft);border-color:var(--bleu);border-left-color:var(--bleu);box-shadow:0 0 0 2px var(--bleu-soft)}
+.scenario-item.forbidden{border-left-color:var(--rouge)}
+.scenario-item.forbidden:hover{background:var(--rouge-soft)}
+.scenario-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:4px;color:var(--text)}
+.scenario-desc{font-size:10px;color:var(--gris-500);font-family:var(--mono)}
+.scenario-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-top:4px;text-transform:uppercase}
+.badge-ok{background:var(--vert-soft);color:var(--vert)}
+.badge-warn{background:var(--or-soft);color:#8a5e00}
+.badge-danger{background:var(--rouge-soft);color:var(--rouge)}
+
+.drop-zone{border:2px dashed var(--border);border-radius:8px;padding:16px;text-align:center;background:var(--gris-50);transition:all .2s;cursor:pointer;margin:8px;flex-shrink:0}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(--bleu);background:var(--bleu-soft)}
+.drop-zone .icon{font-size:28px;margin-bottom:6px}
+.drop-zone .title{font-weight:700;color:var(--bleu);margin-bottom:4px;font-size:12px}
+.drop-zone .sub{font-size:10px;color:var(--gris-500)}
+
+.center{background:var(--bg);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.search-bar{padding:14px 16px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search-bar input[type=text]{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:11px 14px;font-size:14px;color:var(--text);font-family:var(--sans)}
+.search-bar input[type=text]:focus{outline:none;border-color:var(--bleu);box-shadow:0 0 0 2px var(--bleu-soft)}
+.search-bar select{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:11px 12px;font-size:13px;color:var(--text);font-family:var(--sans)}
+.btn{background:var(--bleu);color:#fff;border:1px solid var(--bleu);font-size:13px;font-weight:700;padding:11px 20px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:var(--sans);white-space:nowrap}
+.btn:hover{background:var(--bleu-hi);border-color:var(--bleu-hi)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.secondary{background:var(--panel);color:var(--text);border-color:var(--border)}
+.btn.secondary:hover{border-color:var(--bleu);color:var(--bleu);background:var(--bleu-soft)}
+.btn.danger{background:var(--rouge);border-color:var(--rouge)}
+.btn.danger:hover{background:#c0000d}
+
+.mode-tabs{display:flex;gap:0;padding:0 10px;border-bottom:1px solid var(--border);background:var(--panel);flex-shrink:0;overflow-x:auto}
+.mode-tab{background:transparent;border:none;color:var(--gris-700);font-size:12px;font-weight:500;padding:10px 14px;cursor:pointer;transition:all .15s;border-bottom:3px solid transparent;font-family:var(--sans);white-space:nowrap}
+.mode-tab:hover{background:var(--gris-50);color:var(--bleu)}
+.mode-tab.active{color:var(--bleu);border-bottom-color:var(--bleu);font-weight:700}
+
+.warning-banner{padding:12px 16px;background:var(--or-soft);border-bottom:1px solid var(--or);color:#8a5e00;font-size:12px;line-height:1.6;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.warning-banner.danger{background:var(--rouge-soft);border-bottom-color:var(--rouge);color:var(--rouge)}
+.warning-banner[hidden]{display:none}
+
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;padding:14px;background:var(--panel);border-bottom:1px solid var(--border);flex-shrink:0}
+.kpi{background:var(--gris-50);border:1px solid var(--border);border-left:4px solid var(--bleu);border-radius:4px;padding:10px 12px;transition:all .15s}
+.kpi:hover{border-color:var(--bleu);background:var(--bleu-soft);transform:translateY(-2px)}
+.kpi .label{font-size:9px;font-weight:700;color:var(--gris-500);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.kpi .value{font-size:16px;font-weight:800;color:var(--bleu);font-family:var(--mono);line-height:1.1;word-break:break-all}
+.kpi .sub{font-size:9px;color:var(--gris-500);margin-top:3px;font-family:var(--mono)}
+.kpi.vert{border-left-color:var(--vert)} .kpi.vert .value{color:var(--vert)}
+.kpi.or{border-left-color:var(--or)} .kpi.or .value{color:#8a5e00}
+.kpi.rouge{border-left-color:var(--rouge)} .kpi.rouge .value{color:var(--rouge)}
+
+.results{flex:1;overflow-y:auto;padding:14px;min-height:0}
+.card{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--bleu);border-radius:4px;padding:14px 16px;margin-bottom:10px;transition:all .15s;animation:fadeInUp .35s ease-out}
+.card:hover{border-color:var(--bleu);box-shadow:0 4px 12px rgba(0,0,145,.08)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card h3{font-size:14px;color:var(--bleu);margin-bottom:8px}
+.card h4{font-size:12px;color:var(--bleu);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+.card p{font-size:12px;color:var(--gris-700);margin-bottom:6px}
+.card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{background:var(--gris-50);padding:3px 8px;border-radius:3px;border:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--gris-700);white-space:nowrap}
+.tag.bleu{background:var(--bleu-soft);color:var(--bleu);border-color:var(--bleu-soft)}
+.tag.vert{background:var(--vert-soft);color:var(--vert);border-color:var(--vert-soft)}
+.tag.rouge{background:var(--rouge-soft);color:var(--rouge);border-color:var(--rouge-soft)}
+.tag.or{background:var(--or-soft);color:#8a5e00;border-color:var(--or-soft)}
+.tag.mono{font-family:var(--mono);font-size:9px;background:transparent;border:1px dashed var(--border);color:var(--muted)}
+
+.bar-row{display:grid;grid-template-columns:180px 1fr 70px;align-items:center;gap:8px;margin-bottom:8px;font-size:11px}
+.bar-row .name{color:var(--gris-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--mono);font-weight:600}
+.bar-track{background:var(--gris-100);border-radius:3px;height:18px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--bleu) 0%,var(--bleu-hi) 100%);border-radius:3px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.bar-fill.vert{background:linear-gradient(90deg,var(--vert) 0%,#22c55e 100%)}
+.bar-fill.or{background:linear-gradient(90deg,#8a5e00 0%,var(--or) 100%)}
+.bar-fill.rouge{background:linear-gradient(90deg,var(--rouge) 0%,#ff4444 100%)}
+.bar-row .val{text-align:right;font-variant-numeric:tabular-nums;color:var(--bleu);font-weight:700;font-family:var(--mono)}
+
+.right{background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.rs-head{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--gris-50);font-size:12px;font-weight:700;color:var(--bleu);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.rs-head::before{content:'';width:4px;height:14px;background:var(--or)}
+.rs-body{flex:1;overflow-y:auto;padding:12px;min-height:0}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:4px;margin-bottom:10px;overflow:hidden}
+.panel-head{padding:9px 12px;background:var(--gris-50);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--bleu);letter-spacing:.5px;text-transform:uppercase}
+.panel-body{padding:10px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--gris-100);font-size:12px}
+.row:last-child{border-bottom:none}
+.row .k{color:var(--gris-700)}
+.row .v{color:var(--text);font-weight:700;font-family:var(--mono);font-size:11px;text-align:right;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .v.bleu{color:var(--bleu)} .row .v.vert{color:var(--vert)} .row .v.rouge{color:var(--rouge)} .row .v.or{color:#8a5e00}
+
+.matrix{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.matrix th,.matrix td{padding:6px 8px;border:1px solid var(--border);text-align:center}
+.matrix th{background:var(--bleu);color:#fff;font-weight:700;position:sticky;top:0}
+.matrix th.row-head{text-align:left;background:var(--bleu-soft);color:var(--bleu)}
+.matrix td.row-head{text-align:left;background:var(--gris-50);font-weight:600;color:var(--gris-700);position:sticky;left:0}
+.matrix td.cell{cursor:pointer;transition:all .15s;font-family:var(--mono);font-weight:700}
+.matrix td.cell:hover{transform:scale(1.05);border-color:var(--bleu)}
+.matrix td.cell.zero{color:var(--gris-500);background:var(--gris-50);cursor:default}
+
+.export-group{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border);background:var(--panel);flex-wrap:wrap}
+.export-btn{flex:1;min-width:100px;background:var(--panel);color:var(--text);border:1px solid var(--border);font-size:12px;font-weight:600;padding:10px 14px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.export-btn:hover:not(:disabled){border-color:var(--bleu);color:var(--bleu);background:var(--bleu-soft)}
+.export-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--gris-900);color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;font-weight:600;z-index:1000;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:slideInRight .3s ease-out;max-width:400px}
+.toast.success{background:var(--vert)}
+.toast.error{background:var(--rouge)}
+.toast.info{background:var(--bleu)}
+@keyframes slideInRight{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.proc-step{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--gris-100);font-size:12px;align-items:flex-start}
+.proc-step:last-child{border-bottom:none}
+.proc-num{background:var(--bleu);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;font-family:var(--mono)}
+.proc-num.rouge{background:var(--rouge)}
+.proc-num.vert{background:var(--vert)}
+.proc-txt{flex:1;color:var(--gris-700)}
+.proc-txt strong{color:var(--text)}
+
+.mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200}
+.mobile-overlay.visible{display:block}
+
+@media(max-width:900px){
+  .app{display:flex;flex-direction:column;height:auto}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:290px;max-width:85vw;z-index:300;transform:translateX(-100%);transition:transform .3s ease-out;box-shadow:8px 0 24px rgba(0,0,0,.15)}
+  .sidebar.open{transform:translateX(0)}
+  .right{width:100%;border-left:none;border-top:1px solid var(--border)}
+  .results{max-height:70vh}
+  .burger-menu{display:flex}
+  .brand .sub{display:none}
+  .toast{bottom:12px;right:12px;left:12px;max-width:none}
+}
+</style>
+</head>
+<body>
+
+<div class="tricolore"></div>
+
+<div class="header">
+  <button class="burger-menu" id="burgerMenu" title="Menu">☰</button>
+  <div class="marianne">RF</div>
+  <div class="header-txt">
+    <strong>IFREMER · HYSCORES · Spectrhabent-OI</strong>
+    <span>Monitor Récif Expert — Analyse scientifique multi-scénarios · La Réunion</span>
+  </div>
+  <div class="header-devise"><em>Liberté</em><br><em>Égalité</em><br><em>Fraternité</em></div>
+</div>
+
+<div class="topbar">
+  <div class="brand"><span class="dot offline" id="statusDot"></span>MONITOR RÉCIF EXPERT <span class="sub" style="color:var(--muted);font-weight:400;font-size:12px">/ 974</span></div>
+  <div class="topbar-right">
+    <div class="stat"><span>SOURCE</span><span class="val or" id="tbSource">AUCUNE</span></div>
+    <div class="stat"><span>DATASETS</span><span class="val" id="tbDatasets">0</span></div>
+    <div class="stat"><span>SCÉNARIOS</span><span class="val or" id="tbScenarios">5</span></div>
+    <div class="stat"><span>INDICATEURS</span><span class="val vert" id="tbIndic">6</span></div>
+    <button class="theme-toggle" id="themeToggle" title="Thème">🌙</button>
+  </div>
+</div>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-title">🎯 Scénarios experts</div>
+      <div class="sb-count" id="sbCount">Chargez un fichier JSON</div>
+    </div>
+    <div class="sb-list" id="scenarioList">
+      <div style="text-align:center;padding:20px;color:var(--muted);font-size:11px">
+        Aucune donnée chargée.<br>Glissez un fichier JSON ci-dessous.
+      </div>
+    </div>
+    <div class="drop-zone" id="dropZone">
+      <div class="icon">📁</div>
+      <div class="title">Glissez-déposez JSON</div>
+      <div class="sub">ou cliquez pour choisir</div>
+      <input type="file" id="fileInput" accept=".json" style="display:none">
+    </div>
+  </aside>
+
+  <main class="center">
+    <div class="search-bar">
+      <input type="text" id="queryInput" placeholder="🔍 Rechercher un dataset, un tag, une année…">
+      <select id="sortSelect">
+        <option value="default">Tri : défaut</option>
+        <option value="annee_desc">Année ↓</option>
+        <option value="annee_asc">Année ↑</option>
+        <option value="qualite_desc">Qualité ↓</option>
+        <option value="theme_asc">Thème A→Z</option>
+      </select>
+      <button class="btn" id="btnAnalyze">▶ ANALYSER</button>
+      <button class="btn secondary" id="btnReset">↺ Réinitialiser</button>
+    </div>
+
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-view="overview">📊 Vue d'ensemble</button>
+      <button class="mode-tab" data-view="scenario">🎯 Scénario actif</button>
+      <button class="mode-tab" data-view="datasets">🗂️ Datasets</button>
+      <button class="mode-tab" data-view="analyses">🔬 Analyses</button>
+      <button class="mode-tab" data-view="indicators">📐 Indicateurs</button>
+      <button class="mode-tab" data-view="matrix">🔲 Matrice</button>
+      <button class="mode-tab" data-view="timeline">📅 Timeline</button>
+      <button class="mode-tab" data-view="evolution">📈 Évolution</button>
+      <button class="mode-tab" data-view="stats">📊 Statistiques</button>
+      <button class="mode-tab" data-view="tags">🏷️ Tags</button>
+      <button class="mode-tab" data-view="dce">🏛️ DCE</button>
+      <button class="mode-tab" data-view="warnings">⚠️ Avertissements</button>
+    </div>
+
+    <div class="warning-banner" id="warningBanner" hidden>
+      ⚠️ <strong>Incertitudes documentées :</strong> décote marégraphique 2015 (±15 pts VCH) · géoréférencement (±10 %) · seuils VCH non publiés · licence <code>notspecified</code>
+    </div>
+
+    <div class="kpi-strip" id="kpiStrip"></div>
+
+    <div class="results" id="resultsArea">
+      <div style="text-align:center;padding:60px 20px;color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:16px">🇫🇷</div>
+        <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:16px">Monitor Récif Expert</div>
+        <div>Chargez <strong>reunion_974_analyses_completes.json</strong> depuis la barre latérale.</div>
+      </div>
+    </div>
+
+    <div class="export-group">
+      <button class="export-btn" id="exportCsv" disabled>📥 CSV</button>
+      <button class="export-btn" id="exportJson" disabled>📥 JSON</button>
+      <button class="export-btn" id="exportHtml" disabled>📥 Rapport HTML</button>
+      <button class="export-btn" id="exportDce" disabled>🏛️ Rapport DCE</button>
+      <button class="export-btn" id="clearBtn">🗑️ Effacer</button>
+    </div>
+  </main>
+
+  <aside class="right">
+    <div class="rs-head">Intelligence Récif</div>
+    <div class="rs-body">
+      <div class="panel">
+        <div class="panel-head">💚 ENVIRONNEMENT</div>
+        <div class="panel-body">
+          <div class="row"><span class="k">Source</span><span class="v bleu" id="ivSource">—</span></div>
+          <div class="row"><span class="k">Projets</span><span class="v">HYSCORES · Spectrhabent-OI</span></div>
+          <div class="row"><span class="k">Portail</span><span class="v">data.gouv.fr 🇫🇷</span></div>
+          <div class="row"><span class="k">Statut</span><span class="v or" id="ivStatus">● EN ATTENTE</span></div>
+          <div class="row"><span class="k">Chargé le</span><span class="v" id="ivDate">—</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">📊 SYNTHÈSE DATASETS</div>
+        <div class="panel-body">
+          <div class="row"><span class="k">Total</span><span class="v bleu" id="ivTotal">—</span></div>
+          <div class="row"><span class="k">VCH</span><span class="v" id="ivVCH">—</span></div>
+          <div class="row"><span class="k">Entités coralliennes</span><span class="v" id="ivEntites">—</span></div>
+          <div class="row"><span class="k">Fonds / classification</span><span class="v" id="ivFonds">—</span></div>
+          <div class="row"><span class="k">2009</span><span class="v or" id="iv2009">—</span></div>
+          <div class="row"><span class="k">2015</span><span class="v or" id="iv2015">—</span></div>
+          <div class="row"><span class="k">Différentiels</span><span class="v or" id="ivDiff">—</span></div>
+          <div class="row"><span class="k">Licence</span><span class="v rouge" id="ivLicence">—</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">🏆 SCÉNARIOS RECOMMANDÉS</div>
+        <div class="panel-body" id="recommendedScenarios">
+          <div style="text-align:center;color:var(--muted);font-size:11px;padding:8px">Chargez des données</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">⚠️ POINTS DE VIGILANCE</div>
+        <div class="panel-body">
+          <div class="row"><span class="k">Décote 2015</span><span class="v rouge">±15 pts</span></div>
+          <div class="row"><span class="k">Géoréférencement</span><span class="v or">±10 %</span></div>
+          <div class="row"><span class="k">Seuils VCH</span><span class="v rouge">non publiés</span></div>
+          <div class="row"><span class="k">Validation 2015</span><span class="v rouge">absente</span></div>
+          <div class="row"><span class="k">VCH surfacique 2009</span><span class="v rouge">inexistant</span></div>
+          <div class="row"><span class="k">Fractions non contraintes</span><span class="v or">somme ≠ 100 %</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">🔬 CHAÎNE DE PRODUCTION</div>
+        <div class="panel-body">
+          <div class="row"><span class="k">1. Capteur</span><span class="v">Hyperspectral + LiDAR</span></div>
+          <div class="row"><span class="k">2. Démixage</span><span class="v">Spectral unmixing</span></div>
+          <div class="row"><span class="k">3. Classification</span><span class="v">12 classes</span></div>
+          <div class="row"><span class="k">4. Masques</span><span class="v">Substrat dur / DAR</span></div>
+          <div class="row"><span class="k">5. Indices</span><span class="v">VCH · ASA</span></div>
+          <div class="row"><span class="k">6. Agrégation</span><span class="v">Buffer 20 m</span></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+/* =========================================================
+   MONITOR RÉCIF EXPERT v3.1 — Avec analyses intégrées
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => new Intl.NumberFormat('fr-FR').format(n || 0);
+
+/* =========================================================
+   SCÉNARIOS — IDs COMPLETS
+   ========================================================= */
+const SCENARIOS = [
+  {id:"s1",nom:"Bilan 2009-2015 fiable",desc:"Polyligne + VCH agrégé",
+   datasets:["6756b889d6f163559eab28e6","6756b80ed6f163559eab27ec","6756b806d6f163559eab27d9"],
+   badge:"ok",badgeTxt:"Recommandé",risque:"Faible",
+   procedure:["Audit de comparabilité (CRS, transform, recouvrement > 95 %)","Extraction des statistiques linéaires par tronçon de 20 m","Appariement spatial des buffers 20 m (VCH 2009 vs 2015)","Calcul ΔVCH et classification en 5 catégories","Croisement ΔL × ΔVCH pour identifier les convergences","Flags : changement majeur (> 40 pts), divergence"],
+   controles:["Recouvrement spatial buffers > 95 %","ΔL > 50 % → flag changement majeur","ΔVCH > 40 pts → flag saut anormal","Cohérence ΔL et ΔVCH (signes identiques)"],
+   livrable:"Tableau par tronçon de 20 m avec ID, longueurs, VCH, ΔVCH, flags, secteur"},
+  {id:"s2",nom:"Analyse écologique fine",desc:"Fractions + VCH surfacique",
+   datasets:["6756b82dd6f163559eab2833","6756b835d6f163559eab2846"],
+   badge:"ok",badgeTxt:"Recommandé",risque:"Moyen",
+   procedure:["Normalisation des fractions (somme ≠ 100 %)","Croisement fractions × VCH surfacique","Calcul indices : ratio C/A, dominance, stress","Segmentation en patchs de substrat dur","Statistiques par patch (surface, fractions, indices)","Classification écologique en 5 niveaux"],
+   controles:["Vérifier somme fractions ≠ 100 %","Normaliser si > 100 %","Conserver tel quel si < 100 %","Documenter taux de normalisation"],
+   livrable:"Carte multicouche + tableau par patch avec indices écologiques"},
+  {id:"s3",nom:"Détection de changement",desc:"Raster différentiel + morphologie",
+   datasets:["6756b7fcd6f163559eab27c0"],
+   badge:"warn",badgeTxt:"Avec précautions",risque:"Moyen",
+   procedure:["Filtre médian 3×3 (réduire bruit pixel)","Ouverture morphologique 4 pixels (éliminer petits patchs)","Fermeture morphologique 4 pixels (combler trous)","Seuillage par σ local (2 × écart-type)","Segmentation en patchs connexes","Filtrage surface minimale 100 m²"],
+   controles:["Filtre médian 3×3 obligatoire","Ouverture/fermeture 4 pixels","Seuil = 2 × σ local (jamais global)","Surface minimale 100 m²"],
+   livrable:"Carte de changement significatif + tableau par patch"},
+  {id:"s4",nom:"Reporting DCE",desc:"Polyligne + VCH + incertitudes",
+   datasets:["6756b889d6f163559eab28e6","6756b80ed6f163559eab27ec","6756b806d6f163559eab27d9"],
+   badge:"ok",badgeTxt:"Officiel",risque:"Faible",
+   procedure:["Cadrage DCE (masses d'eau, limites administratives)","Calcul indicateurs : VCH 2009, VCH 2015, ΔVCH","Qualification des incertitudes (±15 pts, ±10 %)","Classification DCE en 5 classes","Tendance : amélioration / stable / dégradation","Mention obligatoire des incertitudes"],
+   controles:["Ne pas utiliser VCH comme indicateur unique","Ne pas omettre les incertitudes","Ne pas comparer sans harmonisation"],
+   livrable:"Rapport DCE officiel avec incertitudes documentées"},
+  {id:"s5",nom:"⚠️ À ÉVITER : ΔVCH brut",desc:"Sans contrôle des covariables",
+   datasets:["6756b82dd6f163559eab2834"],
+   badge:"danger",badgeTxt:"Proscrit",risque:"Élevé",
+   procedure:["❌ NE PAS UTILISER EN L'ÉTAT","Raison 1 : Décote marégraphique 2015 non quantifiée","Raison 2 : Conditions de vol différentes","Raison 3 : Géoréférencement → faux positifs","Raison 4 : Absence de covariables","Raison 5 : Pas d'incertitude fournie"],
+   controles:["Contrôler profondeur","Contrôler exposition hydrodynamique","Contrôler distance à la côte","Contrôler type de substrat","Contrôler zone de protection","Régression ΔVCH ~ covariables"],
+   livrable:"Aucun — utiliser Scénario 1 à la place"}
+];
+
+const INDICATEURS = [
+  {id:"vch",nom:"VCH",full:"Vitalité Corallienne Hyperspectrale",formule:"corail vivant / (corail + algues)",masque:"Substrat dur (platier récifal)",unite:"0-100 %",seuils:[0,20,40,60,80,100],classes:["mauvais","médiocre","moyen","bon","très bon"],note:"Seuils non publiés dans les métadonnées officielles"},
+  {id:"asa",nom:"ASA",full:"Algae Surface Area",formule:"algues / (algues + sable)",masque:"DAR (dépression arrière-récifale)",unite:"0-100 %",seuils:[0,20,40,60,80,100],classes:["très faible","faible","moyen","élevé","très élevé"],note:"Algorithme miroir du VCH"},
+  {id:"entites",nom:"Entités Coralliennes",full:"Seuil珊瑚 > 30 %",formule:"珊瑚覆盖率 > 30 % → pixel binaire",masque:"Tous substrats",unite:"binaire / densité",seuils:[0,30,100],classes:["absent","présent","dominant"],note:"Seuil testé sur 2 dates de vol 2009 → stabilité confirmée"},
+  {id:"ratio_ca",nom:"Ratio C/A",full:"Ratio Corail/Algues",formule:"corail / (corail + algues)",masque:"Substrat dur",unite:"0-1",seuils:[0,0.2,0.4,0.6,0.8,1],classes:["très dégradé","dégradé","moyen","bon","excellent"],note:"Proxy de compétition benthique"},
+  {id:"dominance",nom:"Indice de dominance",full:"VCH × fraction corail",formule:"VCH_surfacique × fraction_corail / 100",masque:"Substrat dur",unite:"0-100",seuils:[0,10,25,50,75,101],classes:["très dégradé","dégradé","moyen","bon","excellent"],note:"Combine vitalité et couverture"},
+  {id:"stress",nom:"Indice de stress",full:"Pression algale",formule:"fraction_algues × (1 − VCH/100)",masque:"Substrat dur",unite:"0-100",seuils:[0,10,25,50,75,101],classes:["très faible","faible","moyen","élevé","très élevé"],note:"Indicateur de pression"}
+];
+
+/* =========================================================
+   ÉTAT GLOBAL
+   ========================================================= */
+const state = {
+  allDatasets: [],
+  filteredDatasets: [],
+  source: "Aucune",
+  loadedAt: null,
+  metadata: null,
+  analyses: null,
+  activeScenario:"s1",
+  activeView:"overview",
+  query:"",
+  sort:"default",
+  theme:localStorage.getItem('monitor-recif-theme') || 'light',
+  analysisResults:null
+};
+
+/* =========================================================
+   THÈME
+   ========================================================= */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const b = $('themeToggle'); if (b) b.textContent = state.theme === 'dark' ? '☀️' : '🌙';
+}
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('monitor-recif-theme', state.theme);
+  applyTheme();
+  if (state.allDatasets.length) renderAll();
+}
+
+/* =========================================================
+   UPLOAD FICHIER JSON
+   ========================================================= */
+function setupDropZone(){
+  const dz = $('dropZone'), fi = $('fileInput');
+  if (!dz || !fi) return;
+  dz.addEventListener('click', () => fi.click());
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+  fi.addEventListener('change', e => handleFile(e.target.files[0]));
+}
+
+function handleFile(file){
+  if (!file){ toast('❌ Aucun fichier', 'error'); return; }
+  if (!file.name.endsWith('.json')){ toast('❌ Format attendu : .json', 'error'); return; }
+  
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      loadData(data, file.name);
+    } catch(err){
+      toast('❌ JSON invalide : ' + err.message, 'error', 6000);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function loadData(data, sourceName){
+  let datasetsArray = data;
+  let metadata = null;
+  let analyses = null;
+  
+  if (!Array.isArray(data)){
+    if (data.datasets){
+      datasetsArray = data.datasets;
+      metadata = data.metadata || null;
+      analyses = data.analyses || null;
+      console.log('📦 Format enrichi détecté');
+      console.log('   Datasets:', datasetsArray.length);
+      console.log('   Analyses:', analyses ? 'oui' : 'non');
+    }
+    else if (data.records) datasetsArray = data.records.map(r => r.fields || r);
+    else datasetsArray = [data];
+  }
+  
+  state.allDatasets = datasetsArray.map(normalizeDataset);
+  state.filteredDatasets = [...state.allDatasets];
+  state.source = sourceName;
+  state.loadedAt = new Date();
+  state.metadata = metadata;
+  state.analyses = analyses;
+  
+  safeSet('tbSource', sourceName.length > 18 ? sourceName.slice(0, 16) + '…' : sourceName, 'val vert');
+  safeSet('ivSource', sourceName, 'v bleu');
+  safeSet('ivStatus', '● CHARGÉ', 'v vert');
+  safeSet('ivDate', state.loadedAt.toLocaleString('fr-FR'));
+  
+  const dot = $('statusDot'); if (dot) dot.classList.remove('offline');
+  $('warningBanner').hidden = false;
+  
+  ['exportCsv','exportJson','exportHtml','exportDce'].forEach(id => $(id).disabled = false);
+  
+  updateStats();
+  applyFilters();
+  renderScenarios();
+  renderAll();
+  
+  toast(`🇫🇷 ${fmt(state.allDatasets.length)} datasets chargés`, 'success', 4000);
+}
+
+function normalizeDataset(d){
+  const pick = (obj, ...keys) => {
+    for (const k of keys){
+      if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return String(obj[k]);
+    }
+    return '—';
+  };
+  
+  const id = pick(d, 'id');
+  
+  let anneeShort = pick(d, 'annee', '');
+  if (!anneeShort || anneeShort === '—'){
+    const anneeRaw = pick(d, 'annee', 'last_update', 'date');
+    const anneeMatch = anneeRaw.match(/\b(20\d{2})\b/);
+    if (anneeMatch) anneeShort = anneeMatch[1];
+  }
+  
+  const titre = pick(d, 'titre', 'title', 'descriptif');
+  const description = pick(d, 'description', 'descriptif');
+  
+  const isDiff = /\d{4}\s*[-–]\s*\d{4}/.test(titre) ||
+                 titre.toLowerCase().includes('différentiel') ||
+                 titre.toLowerCase().includes('differentiel') ||
+                 titre.toLowerCase().includes('évolution');
+  
+  if (isDiff && (!anneeShort || anneeShort === '—')) anneeShort = '2009-2015';
+  
+  if (!anneeShort || anneeShort === '—'){
+    const titreMatch = titre.match(/\b(20\d{2})\b/g);
+    if (titreMatch && titreMatch.length){
+      anneeShort = titreMatch.sort().reverse()[0];
+    }
+  }
+  
+  const tags = Array.isArray(d.tags) ? d.tags :
+               (typeof d.tags === 'string' ? d.tags.split(',').map(t => t.trim()).filter(Boolean) : []);
+  
+  let theme = pick(d, 'theme', '');
+  if (!theme || theme === '—'){
+    theme = 'Autre';
+    const hay = (titre + ' ' + description + ' ' + tags.join(' ')).toLowerCase();
+    if (hay.includes('vch') || hay.includes('vitalité corallienne')) theme = 'VCH';
+    else if (hay.includes('entité') || hay.includes('entites')) theme = 'Entités';
+    else if (hay.includes('nature des fonds') || hay.includes('classification') || hay.includes('fractions')) theme = 'Fonds';
+  }
+  
+  let type = pick(d, 'type', '');
+  if (!type || type === '—'){
+    type = 'Autre';
+    const tlow = titre.toLowerCase();
+    if (tlow.includes('polyligne')) type = 'Vecteur';
+    else if (tlow.includes('vecteur')) type = 'Vecteur';
+    else if (tlow.includes('raster')) type = 'Raster';
+    else if (tlow.includes('indice')) type = 'Indice';
+    else if (tlow.includes('différentiel') || tlow.includes('differentiel')) type = 'Raster diff';
+    else if (tlow.includes('classification')) type = 'Raster class';
+  }
+  
+  let qualite, comparabilite, ecologie, reproductibilite;
+  if (d.scores){
+    qualite = d.scores.qualite_scientifique || 2;
+    comparabilite = d.scores.comparabilite_temporelle || 2;
+    ecologie = d.scores.valeur_ecologique || 2;
+    reproductibilite = d.scores.reproductibilite || 2;
+  } else {
+    const hay = (titre + ' ' + description + ' ' + tags.join(' ')).toLowerCase();
+    qualite = scoreQualite(hay, titre);
+    comparabilite = scoreComparabilite(hay, anneeShort);
+    ecologie = scoreEcologie(hay);
+    reproductibilite = scoreReproductibilite(hay);
+  }
+  
+  return {
+    id, titre, description,
+    annee: anneeShort,
+    anneeFull: pick(d, 'annee_debut', 'last_update', 'date'),
+    type, theme,
+    organisation: pick(d, 'organisation', 'org'),
+    portail: pick(d, 'portail'),
+    pays: pick(d, 'pays'),
+    url: pick(d, 'url'),
+    license: pick(d, 'license'),
+    tags,
+    qualite, comparabilite, ecologie, reproductibilite,
+    campagne: d.campagne || null,
+    capteur: d.capteur || null,
+    resolution_cm: d.resolution_cm || null,
+    scores: d.scores || null,
+    statistiques: d.statistiques || null,
+    traitement: d.traitement || null,
+    evolution: d.evolution || null,
+    incertitude: d.incertitude || null,
+    validation_terrain: d.validation_terrain || null,
+    change: pick(d, 'change'),
+    hash: pick(d, 'hash')
+  };
+}
+
+function scoreQualite(hay, titre){
+  let s = 2;
+  if (hay.includes('vch') || hay.includes('surfacique')) s = 4;
+  if (titre.toLowerCase().includes('indice')) s = Math.max(s, 3);
+  if (titre.toLowerCase().includes('différentiel')) s = Math.min(s, 2);
+  if (titre.toLowerCase().includes('polyligne')) s = Math.max(s, 4);
+  return Math.min(4, Math.max(1, s));
+}
+function scoreComparabilite(hay, annee){
+  let s = 2;
+  if (hay.includes('polyligne') || hay.includes('évolution')) s = 4;
+  if (hay.includes('agrégé') || hay.includes('agrege')) s = 3;
+  if (hay.includes('différentiel')) s = 2;
+  if (hay.includes('surfacique')) s = 1;
+  return Math.min(4, Math.max(1, s));
+}
+function scoreEcologie(hay){
+  let s = 2;
+  if (hay.includes('surfacique') || hay.includes('fractions') || hay.includes('nature des fonds')) s = 4;
+  if (hay.includes('vch') || hay.includes('entité')) s = Math.max(s, 3);
+  return Math.min(4, Math.max(1, s));
+}
+function scoreReproductibilite(hay){
+  let s = 2;
+  if (hay.includes('differentiel') || hay.includes('différentiel')) s = 1;
+  if (hay.includes('indice') || hay.includes('agrégé')) s = 2;
+  return Math.min(4, Math.max(1, s));
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+function updateStats(){
+  const all = state.allDatasets;
+  safeSet('tbDatasets', fmt(all.length));
+  
+  const themes = {};
+  for (const d of all) themes[d.theme] = (themes[d.theme] || 0) + 1;
+  
+  safeSet('ivTotal', fmt(all.length));
+  safeSet('ivVCH', fmt(themes['VCH'] || 0));
+  safeSet('ivEntites', fmt(themes['Entités'] || 0));
+  safeSet('ivFonds', fmt(themes['Fonds'] || 0));
+  safeSet('iv2009', fmt(all.filter(d => d.annee === '2009').length));
+  safeSet('iv2015', fmt(all.filter(d => d.annee === '2015').length));
+  safeSet('ivDiff', fmt(all.filter(d => d.annee === '2009-2015').length));
+  safeSet('ivLicence', all.length ? (all[0].license || 'notspecified') : '—');
+  
+  safeSet('tbScenarios', fmt(SCENARIOS.length));
+  safeSet('tbIndic', fmt(INDICATEURS.length));
+}
+
+/* =========================================================
+   SIDEBAR SCÉNARIOS
+   ========================================================= */
+function renderScenarios(){
+  const el = $('scenarioList');
+  if (!el) return;
+  
+  if (!state.allDatasets.length){
+    el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:11px">
+      Aucune donnée chargée.<br>Glissez un fichier JSON ci-dessous.
+    </div>`;
+    safeSet('sbCount', 'Chargez un fichier JSON');
+    return;
+  }
+  
+  safeSet('sbCount', `${state.allDatasets.length} datasets · ${SCENARIOS.length} scénarios`);
+  
+  const scenarioWithAvailable = SCENARIOS.map(s => {
+    const available = s.datasets.filter(id => state.allDatasets.some(d => d.id === id));
+    const availableRatio = available.length / s.datasets.length;
+    return {...s, available, availableRatio};
+  });
+  
+  el.innerHTML = scenarioWithAvailable.map(s => {
+    const status = s.availableRatio === 1 ? 'complet' :
+                   s.availableRatio > 0 ? `${s.available.length}/${s.datasets.length}` :
+                   'indisponible';
+    const statusCls = s.availableRatio === 1 ? 'ok' :
+                      s.availableRatio > 0 ? 'warn' : 'danger';
+    return `
+    <div class="scenario-item ${state.activeScenario === s.id ? 'active' : ''} ${s.badge === 'danger' ? 'forbidden' : ''}" data-id="${s.id}">
+      <div class="scenario-name">${escapeHtml(s.nom)}</div>
+      <div class="scenario-desc">${escapeHtml(s.desc)}</div>
+      <span class="scenario-badge badge-${statusCls}">${escapeHtml(s.badgeTxt)} · ${status}</span>
+    </div>`;
+  }).join('');
+  
+  el.querySelectorAll('.scenario-item').forEach(item => {
+    item.addEventListener('click', () => {
+      state.activeScenario = item.dataset.id;
+      renderScenarios();
+      renderAll();
+      toast(`Scénario : ${SCENARIOS.find(s => s.id === state.activeScenario).nom}`, 'info');
+    });
+  });
+}
+
+/* =========================================================
+   KPI STRIP
+   ========================================================= */
+function renderKPIs(){
+  if (!state.allDatasets.length){
+    $('kpiStrip').innerHTML = `
+      <div class="kpi or"><div class="label">Statut</div><div class="value">ATTENTE</div><div class="sub">chargez un JSON</div></div>
+      <div class="kpi"><div class="label">Scénarios</div><div class="value">5</div><div class="sub">pré-définis</div></div>
+      <div class="kpi"><div class="label">Indicateurs</div><div class="value">6</div><div class="sub">scientifiques</div></div>
+    `;
+    return;
+  }
+  
+  const scenario = SCENARIOS.find(s => s.id === state.activeScenario);
+  const ds = state.allDatasets.filter(d => scenario.datasets.includes(d.id));
+  
+  if (!ds.length){
+    $('kpiStrip').innerHTML = `<div class="kpi rouge"><div class="label">Scénario</div><div class="value">${scenario.id.toUpperCase()}</div><div class="sub">datasets indisponibles</div></div>`;
+    return;
+  }
+  
+  const avgQualite = ds.reduce((s, d) => s + d.qualite, 0) / ds.length;
+  const avgComparabilite = ds.reduce((s, d) => s + d.comparabilite, 0) / ds.length;
+  const avgEcologie = ds.reduce((s, d) => s + d.ecologie, 0) / ds.length;
+  
+  const kpis = [
+    {label:'Scénario',value:scenario.id.toUpperCase(),sub:scenario.badgeTxt,cls:scenario.badge === 'danger' ? 'rouge' : 'vert'},
+    {label:'Datasets',value:ds.length,sub:'mobilisés',cls:''},
+    {label:'Qualité moy.',value:avgQualite.toFixed(1),sub:'/ 4',cls:avgQualite >= 3 ? 'vert' : avgQualite >= 2 ? 'or' : 'rouge'},
+    {label:'Comparabilité',value:avgComparabilite.toFixed(1),sub:'/ 4',cls:avgComparabilite >= 3 ? 'vert' : avgComparabilite >= 2 ? 'or' : 'rouge'},
+    {label:'Écologie',value:avgEcologie.toFixed(1),sub:'/ 4',cls:avgEcologie >= 3 ? 'vert' : avgEcologie >= 2 ? 'or' : 'rouge'},
+    {label:'Risque',value:scenario.risque,sub:'interprétation',cls:scenario.risque === 'Faible' ? 'vert' : scenario.risque === 'Moyen' ? 'or' : 'rouge'}
+  ];
+  
+  $('kpiStrip').innerHTML = kpis.map(k => `
+    <div class="kpi ${k.cls}">
+      <div class="label">${k.label}</div>
+      <div class="value">${k.value}</div>
+      <div class="sub">${k.sub}</div>
+    </div>
+  `).join('');
+}
+
+/* =========================================================
+   FILTRES
+   ========================================================= */
+function applyFilters(){
+  const q = state.query.toLowerCase().trim();
+  const sort = state.sort;
+  
+  state.filteredDatasets = state.allDatasets.filter(d => {
+    if (!q) return true;
+    const hay = [d.titre, d.description, d.annee, d.type, d.theme, d.organisation, d.tags.join(' ')].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  
+  state.filteredDatasets.sort((a, b) => {
+    switch(sort){
+      case 'annee_desc': return String(b.annee).localeCompare(String(a.annee));
+      case 'annee_asc':  return String(a.annee).localeCompare(String(b.annee));
+      case 'qualite_desc': return b.qualite - a.qualite;
+      case 'theme_asc': return String(a.theme).localeCompare(String(b.theme));
+      default: return 0;
+    }
+  });
+}
+
+/* =========================================================
+   VUES
+   ========================================================= */
+function renderAll(){
+  renderKPIs();
+  renderView();
+  renderRecommendedScenarios();
+}
+
+function renderRecommendedScenarios(){
+  const el = $('recommendedScenarios');
+  if (!el) return;
+  if (!state.allDatasets.length){
+    el.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:11px;padding:8px">Chargez des données</div>';
+    return;
+  }
+  el.innerHTML = SCENARIOS.filter(s => s.badge !== 'danger').map(s => {
+    const available = s.datasets.filter(id => state.allDatasets.some(d => d.id === id)).length;
+    const ratio = available / s.datasets.length;
+    return `
+    <div class="row" style="cursor:pointer" onclick="document.querySelector('[data-id=\\'${s.id}\\']').click()">
+      <span class="k">${escapeHtml(s.nom)}</span>
+      <span class="v ${ratio === 1 ? 'vert' : ratio > 0 ? 'or' : 'rouge'}">${available}/${s.datasets.length}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderView(){
+  const area = $('resultsArea');
+  if (!area) return;
+  if (!state.allDatasets.length){
+    area.innerHTML = `
+      <div style="text-align:center;padding:60px 20px;color:var(--muted)">
+        <div style="font-size:48px;margin-bottom:16px">🇫🇷</div>
+        <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:16px">Monitor Récif Expert</div>
+        <div>Chargez <strong>reunion_974_analyses_completes.json</strong> depuis la barre latérale.</div>
+      </div>`;
+    return;
+  }
+  switch(state.activeView){
+    case 'overview': return renderOverview(area);
+    case 'scenario': return renderScenarioDetail(area);
+    case 'datasets': return renderDatasets(area);
+    case 'analyses': return renderAnalyses(area);
+    case 'indicators': return renderIndicators(area);
+    case 'matrix': return renderMatrix(area);
+    case 'timeline': return renderTimeline(area);
+    case 'evolution': return renderEvolution(area);
+    case 'stats': return renderStats(area);
+    case 'tags': return renderTags(area);
+    case 'dce': return renderDCE(area);
+    case 'warnings': return renderWarnings(area);
+  }
+}
+
+/* ============ VUE : ANALYSES ============ */
+function renderAnalyses(area){
+  const a = state.analyses;
+  
+  if (!a){
+    area.innerHTML = `
+      <div class="card" style="border-left-color:var(--or)">
+        <h3>🔬 Analyses</h3>
+        <p>Aucune analyse disponible dans le fichier chargé.</p>
+        <p style="color:var(--muted);font-size:11px;margin-top:8px">
+          Chargez <code>reunion_974_analyses_completes.json</code> pour voir les analyses scientifiques.
+        </p>
+      </div>`;
+    return;
+  }
+  
+  const stack = a.stack_2009_2015 || {};
+  const classifications = a.classifications || [];
+  const synthese = a.synthese || {};
+  
+  const distribBar = (dist, title) => {
+    if (!dist) return '';
+    const items = [
+      {label:'Mauvais (0-20%)', val: dist.mauvais_0_20 || 0, cls:'rouge'},
+      {label:'Médiocre (20-40%)', val: dist.mediocre_20_40 || 0, cls:'or'},
+      {label:'Moyen (40-60%)', val: dist.moyen_40_60 || 0, cls:''},
+      {label:'Bon (60-80%)', val: dist.bon_60_80 || 0, cls:'vert'},
+      {label:'Très bon (80-100%)', val: dist.tres_bon_80_100 || 0, cls:'vert'},
+    ];
+    const max = Math.max(...items.map(i => i.val), 1);
+    return `
+      <h4 style="margin-top:12px">${title}</h4>
+      ${items.map(i => `
+        <div class="bar-row">
+          <div class="name">${i.label}</div>
+          <div class="bar-track"><div class="bar-fill ${i.cls}" style="width:${(i.val/max)*100}%"></div></div>
+          <div class="val">${i.val}%</div>
+        </div>
+      `).join('')}
+    `;
+  };
+  
+  const tendance = synthese.tendance || 'stable';
+  const tendanceColor = tendance === 'degradation' ? 'var(--rouge)' : tendance === 'amelioration' ? 'var(--vert)' : 'var(--or)';
+  
+  area.innerHTML = `
+    <div class="card" style="border-left-color:var(--or)">
+      <h3>🔬 Analyses scientifiques — Résultats</h3>
+      <p>Synthèse VCH et classifications · IFREMER / HYSCORES / Spectrhabent-OI</p>
+      <div class="meta">
+        <span class="tag or">2009-2015</span>
+        <span class="tag">Saint-Gilles · Saint-Leu · Étang-Salé · Saint-Pierre</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>📊 Évolution 2009 → 2015 (Saint-Gilles)</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:12px 0">
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:11px;color:var(--gris-500);text-transform:uppercase">VCH 2009</div>
+          <div style="font-size:22px;font-weight:800;color:var(--bleu);font-family:var(--mono)">${stack.vch_2009_moyen || '—'}%</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:11px;color:var(--gris-500);text-transform:uppercase">VCH 2015</div>
+          <div style="font-size:22px;font-weight:800;color:var(--bleu);font-family:var(--mono)">${stack.vch_2015_moyen || '—'}%</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:11px;color:var(--gris-500);text-transform:uppercase">Δ VCH</div>
+          <div style="font-size:22px;font-weight:800;font-family:var(--mono);color:${stack.delta_moyen < 0 ? 'var(--rouge)' : 'var(--vert)'}">${stack.delta_moyen > 0 ? '+' : ''}${stack.delta_moyen || '—'}</div>
+        </div>
+      </div>
+      
+      <h4>Distribution du changement</h4>
+      <div class="bar-row">
+        <div class="name">Gain (+2 pts)</div>
+        <div class="bar-track"><div class="bar-fill vert" style="width:${stack.gain_pct || 0}%"></div></div>
+        <div class="val">${stack.gain_pct || 0}%</div>
+      </div>
+      <div class="bar-row">
+        <div class="name">Stable (±2 pts)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${stack.stable_pct || 0}%"></div></div>
+        <div class="val">${stack.stable_pct || 0}%</div>
+      </div>
+      <div class="bar-row">
+        <div class="name">Perte (-2 pts)</div>
+        <div class="bar-track"><div class="bar-fill rouge" style="width:${stack.perte_pct || 0}%"></div></div>
+        <div class="val">${stack.perte_pct || 0}%</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>📊 Distribution VCH (Saint-Gilles)</h3>
+      ${distribBar(stack.distribution_2009, 'Année 2009')}
+      ${distribBar(stack.distribution_2015, 'Année 2015')}
+    </div>
+    
+    <div class="card">
+      <h3>🗂️ Classifications par secteur (2015)</h3>
+      ${classifications.map(c => `
+        <div style="padding:12px 0;border-bottom:1px solid var(--gris-100)">
+          <div style="font-weight:700;color:var(--bleu);margin-bottom:8px;font-size:13px">${escapeHtml(c.nom)}</div>
+          <div class="meta" style="margin-bottom:8px">
+            <span class="tag bleu">${c.surface_totale_km2} km²</span>
+            <span class="tag or">${c.surface_recifale_km2} km² récif</span>
+            <span class="tag vert">${c.corail_vivant.pct}% corail</span>
+          </div>
+          <div style="font-size:11px;color:var(--gris-700);font-family:var(--mono)">
+            Corail vivant : <strong>${c.corail_vivant.surface_km2} km²</strong>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="card" style="border-left-color:${tendanceColor}">
+      <h3>✅ Synthèse globale</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px">
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase">Tendance</div>
+          <div style="font-size:16px;font-weight:800;color:${tendanceColor};text-transform:capitalize">${tendance}</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase">Surface récifale</div>
+          <div style="font-size:16px;font-weight:800;color:var(--bleu);font-family:var(--mono)">${synthese.surface_totale_recifale_km2} km²</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase">Corail vivant</div>
+          <div style="font-size:16px;font-weight:800;color:var(--vert);font-family:var(--mono)">${synthese.surface_corail_vivant_km2} km²</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase">Meilleur secteur</div>
+          <div style="font-size:16px;font-weight:800;color:var(--or)">${escapeHtml(synthese.meilleur_secteur || '—')}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card" style="border-left-color:var(--rouge)">
+      <h3>⚠️ Incertitudes documentées</h3>
+      <div class="meta">
+        <span class="tag rouge">Décote 2015 : ±15 pts</span>
+        <span class="tag or">Géoréférencement : ±10 %</span>
+        <span class="tag or">Seuils VCH : non publiés</span>
+        <span class="tag rouge">Licence : notspecified</span>
+      </div>
+    </div>
+  `;
+}
+
+/* ============ VUE : OVERVIEW ============ */
+function renderOverview(area){
+  const scenario = SCENARIOS.find(s => s.id === state.activeScenario);
+  const ds = state.allDatasets.filter(d => scenario.datasets.includes(d.id));
+  
+  const bars = SCENARIOS.map(s => {
+    const sds = state.allDatasets.filter(d => s.datasets.includes(d.id));
+    const q = sds.length ? sds.reduce((a, d) => a + d.qualite, 0) / sds.length : 0;
+    return {nom:s.nom, qualite:q, badge:s.badge, n:sds.length};
+  });
+  
+  area.innerHTML = `
+    <div class="card">
+      <h3>📊 Vue d'ensemble — Comparaison des scénarios</h3>
+      <p>Qualité scientifique moyenne par scénario (échelle 0-4)</p>
+      ${bars.map(b => `
+        <div class="bar-row">
+          <div class="name">${escapeHtml(b.nom)}</div>
+          <div class="bar-track"><div class="bar-fill ${b.badge === 'danger' ? 'rouge' : b.badge === 'warn' ? 'or' : 'vert'}" style="width:${(b.qualite / 4) * 100}%"></div></div>
+          <div class="val">${b.qualite.toFixed(1)}</div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="card">
+      <h3>🎯 Scénario actif : ${escapeHtml(scenario.nom)}</h3>
+      <p>${escapeHtml(scenario.desc)}</p>
+      <div class="meta">
+        <span class="tag ${scenario.badge === 'danger' ? 'rouge' : scenario.badge === 'warn' ? 'or' : 'vert'}">${escapeHtml(scenario.badgeTxt)}</span>
+        <span class="tag">Risque : ${escapeHtml(scenario.risque)}</span>
+        <span class="tag">${ds.length}/${scenario.datasets.length} datasets</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>📋 Datasets mobilisés</h3>
+      ${ds.length ? ds.map(d => `
+        <div style="padding:10px 0;border-bottom:1px solid var(--gris-100)">
+          <div style="font-weight:700;color:var(--bleu);margin-bottom:4px">${escapeHtml(d.titre)}</div>
+          <div class="meta">
+            <span class="tag bleu">${escapeHtml(d.annee)}</span>
+            <span class="tag">${escapeHtml(d.type)}</span>
+            <span class="tag">Qualité ${d.qualite}/4</span>
+            <span class="tag">Comparabilité ${d.comparabilite}/4</span>
+            <span class="tag">Écologie ${d.ecologie}/4</span>
+          </div>
+        </div>
+      `).join('') : '<p style="color:var(--rouge)">Aucun dataset disponible pour ce scénario.</p>'}
+    </div>
+  `;
+}
+
+/* ============ VUE : SCÉNARIO DÉTAIL ============ */
+function renderScenarioDetail(area){
+  const scenario = SCENARIOS.find(s => s.id === state.activeScenario);
+  const ds = state.allDatasets.filter(d => scenario.datasets.includes(d.id));
+  const isDanger = scenario.badge === 'danger';
+  
+  area.innerHTML = `
+    <div class="card" style="border-left-color:${isDanger ? 'var(--rouge)' : 'var(--bleu)'}">
+      <h3>${isDanger ? '⚠️' : '🎯'} ${escapeHtml(scenario.nom)}</h3>
+      <p>${escapeHtml(scenario.desc)}</p>
+      <div class="meta">
+        <span class="tag ${isDanger ? 'rouge' : scenario.badge === 'warn' ? 'or' : 'vert'}">${escapeHtml(scenario.badgeTxt)}</span>
+        <span class="tag">Risque : ${escapeHtml(scenario.risque)}</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>🔬 Procédure experte</h3>
+      ${scenario.procedure.map((p, i) => `
+        <div class="proc-step">
+          <div class="proc-num ${isDanger ? 'rouge' : ''}">${isDanger ? '✕' : i + 1}</div>
+          <div class="proc-txt">${escapeHtml(p)}</div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="card">
+      <h3>✅ Contrôles qualité obligatoires</h3>
+      ${scenario.controles.map(c => `
+        <div class="proc-step">
+          <div class="proc-num vert">✓</div>
+          <div class="proc-txt">${escapeHtml(c)}</div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="card">
+      <h3>📦 Livrable attendu</h3>
+      <p>${escapeHtml(scenario.livrable)}</p>
+    </div>
+    
+    <div class="card">
+      <h3>📋 Datasets mobilisés</h3>
+      ${ds.length ? ds.map(d => `
+        <div style="padding:10px 0;border-bottom:1px solid var(--gris-100)">
+          <div style="font-weight:700;color:var(--bleu);margin-bottom:4px">${escapeHtml(d.titre)}</div>
+          <div class="meta">
+            <span class="tag bleu">${escapeHtml(d.annee)}</span>
+            <span class="tag">${escapeHtml(d.type)}</span>
+            ${d.campagne ? `<span class="tag or">${escapeHtml(d.campagne)}</span>` : ''}
+            ${d.capteur ? `<span class="tag">${escapeHtml(d.capteur)}</span>` : ''}
+          </div>
+        </div>
+      `).join('') : '<p style="color:var(--rouge)">Aucun dataset disponible.</p>'}
+    </div>
+    
+    ${isDanger ? `
+    <div class="card" style="border-left-color:var(--rouge);background:var(--rouge-soft)">
+      <h3 style="color:var(--rouge)">🚫 SCÉNARIO PROSCRIT</h3>
+      <p style="color:var(--rouge)"><strong>Ne pas utiliser en l'état.</strong> Alternative : Scénario 1</p>
+    </div>
+    ` : ''}
+  `;
+}
+
+/* ============ VUE : DATASETS ============ */
+function renderDatasets(area){
+  const filtered = state.filteredDatasets;
+  
+  if (!filtered.length){
+    area.innerHTML = '<div class="card"><p>Aucun dataset ne correspond à la recherche.</p></div>';
+    return;
+  }
+  
+  const newOnes = filtered.filter(d => !SCENARIOS.some(s => s.datasets.includes(d.id)));
+  
+  area.innerHTML = `
+    <div class="card" style="border-left-color:var(--or)">
+      <h3>🗂️ ${filtered.length} dataset(s) affiché(s) sur ${state.allDatasets.length}</h3>
+      <p style="color:var(--muted);font-family:var(--mono);font-size:11px">Source : ${escapeHtml(state.source)}</p>
+      ${newOnes.length ? `<p style="color:var(--or);font-size:11px;margin-top:6px">🆕 ${newOnes.length} dataset(s) non référencé(s)</p>` : ''}
+    </div>
+    ${filtered.map(d => {
+      const isNew = !SCENARIOS.some(s => s.datasets.includes(d.id));
+      return `
+    <div class="card" style="${isNew ? 'border-left-color:var(--or)' : ''}">
+      <h3>${isNew ? '🆕 ' : ''}${escapeHtml(d.titre)}</h3>
+      <p>${escapeHtml(d.description.slice(0, 300))}${d.description.length > 300 ? '…' : ''}</p>
+      <div class="meta">
+        <span class="tag bleu">${escapeHtml(d.annee)}</span>
+        <span class="tag">${escapeHtml(d.type)}</span>
+        <span class="tag">${escapeHtml(d.theme)}</span>
+        ${d.campagne ? `<span class="tag or">${escapeHtml(d.campagne)}</span>` : ''}
+        <span class="tag mono">${escapeHtml(d.id.slice(0, 12))}…</span>
+      </div>
+      ${d.capteur || d.resolution_cm ? `
+      <div class="meta" style="margin-top:8px">
+        ${d.capteur ? `<span class="tag">📷 ${escapeHtml(d.capteur)}</span>` : ''}
+        ${d.resolution_cm ? `<span class="tag">📏 ${d.resolution_cm} cm</span>` : ''}
+      </div>
+      ` : ''}
+      <div style="margin-top:12px">
+        <div class="bar-row"><div class="name">Qualité</div><div class="bar-track"><div class="bar-fill ${d.qualite >= 3 ? 'vert' : d.qualite >= 2 ? 'or' : 'rouge'}" style="width:${(d.qualite / 4) * 100}%"></div></div><div class="val">${d.qualite}/4</div></div>
+        <div class="bar-row"><div class="name">Comparabilité</div><div class="bar-track"><div class="bar-fill ${d.comparabilite >= 3 ? 'vert' : d.comparabilite >= 2 ? 'or' : 'rouge'}" style="width:${(d.comparabilite / 4) * 100}%"></div></div><div class="val">${d.comparabilite}/4</div></div>
+        <div class="bar-row"><div class="name">Valeur écologique</div><div class="bar-track"><div class="bar-fill ${d.ecologie >= 3 ? 'vert' : d.ecologie >= 2 ? 'or' : 'rouge'}" style="width:${(d.ecologie / 4) * 100}%"></div></div><div class="val">${d.ecologie}/4</div></div>
+        <div class="bar-row"><div class="name">Reproductibilité</div><div class="bar-track"><div class="bar-fill ${d.reproductibilite >= 3 ? 'vert' : d.reproductibilite >= 2 ? 'or' : 'rouge'}" style="width:${(d.reproductibilite / 4) * 100}%"></div></div><div class="val">${d.reproductibilite}/4</div></div>
+      </div>
+      ${d.statistiques ? `
+      <div style="margin-top:10px;padding:10px;background:var(--gris-50);border-radius:4px;border-left:3px solid var(--or)">
+        <div style="font-weight:700;color:var(--or);font-size:11px;margin-bottom:6px;text-transform:uppercase">📊 Statistiques</div>
+        ${d.statistiques.vch_moyen !== undefined ? `<div style="font-family:var(--mono);font-size:11px">VCH moyen : <strong>${d.statistiques.vch_moyen}</strong></div>` : ''}
+        ${d.statistiques.vch_ecart_type !== undefined ? `<div style="font-family:var(--mono);font-size:11px">Écart-type : <strong>${d.statistiques.vch_ecart_type}</strong></div>` : ''}
+        ${d.statistiques.surface_totale_ha !== undefined ? `<div style="font-family:var(--mono);font-size:11px">Surface : <strong>${d.statistiques.surface_totale_ha} ha</strong></div>` : ''}
+      </div>
+      ` : ''}
+      ${d.tags.length ? `<div class="meta" style="margin-top:8px">${d.tags.slice(0, 6).map(t => `<span class="tag mono">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+      ${d.url && d.url !== '—' ? `<div class="meta" style="margin-top:8px"><a href="${escapeHtml(d.url)}" target="_blank" rel="noopener" class="tag bleu" style="text-decoration:none">🔗 data.gouv.fr</a></div>` : ''}
+    </div>`;
+    }).join('')}
+  `;
+}
+
+/* ============ VUE : INDICATEURS ============ */
+function renderIndicators(area){
+  area.innerHTML = INDICATEURS.map(ind => `
+    <div class="card">
+      <h3>📐 ${escapeHtml(ind.nom)} — ${escapeHtml(ind.full)}</h3>
+      <div class="meta">
+        <span class="tag bleu">${escapeHtml(ind.unite)}</span>
+        <span class="tag">Masque : ${escapeHtml(ind.masque)}</span>
+      </div>
+      <h4>Formule</h4>
+      <p style="font-family:var(--mono);background:var(--gris-50);padding:8px;border-radius:4px;border-left:3px solid var(--bleu)">
+        <strong>${escapeHtml(ind.nom)}</strong> = ${escapeHtml(ind.formule)}
+      </p>
+      <h4>Classes</h4>
+      <table class="matrix">
+        <thead><tr><th>Classe</th><th>Seuil</th><th>Qualification</th></tr></thead>
+        <tbody>
+          ${ind.classes.map((c, i) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td>${ind.seuils[i]} - ${ind.seuils[i + 1]}</td>
+              <td><strong>${escapeHtml(c)}</strong></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <p style="margin-top:10px;font-size:11px;color:var(--or)">⚠️ ${escapeHtml(ind.note)}</p>
+    </div>
+  `).join('');
+}
+
+/* ============ VUE : MATRICE ============ */
+function renderMatrix(area){
+  const themes = [...new Set(state.allDatasets.map(d => d.theme))];
+  const annees = [...new Set(state.allDatasets.map(d => d.annee))].sort();
+  
+  const matrix = {};
+  let maxVal = 0;
+  for (const d of state.allDatasets){
+    const k = d.annee + '||' + d.theme;
+    matrix[k] = (matrix[k] || 0) + 1;
+    if (matrix[k] > maxVal) maxVal = matrix[k];
+  }
+  
+  const header = `<tr><th class="row-head">Année \\ Thème</th>${themes.map(t => `<th>${escapeHtml(t)}</th>`).join('')}</tr>`;
+  const rows = annees.map(a => {
+    const cells = themes.map(t => {
+      const v = matrix[a + '||' + t] || 0;
+      if (!v) return `<td class="cell zero">·</td>`;
+      const intensity = 0.15 + 0.85 * (v / maxVal);
+      return `<td class="cell" style="background:rgba(0,0,145,${intensity.toFixed(2)});color:${intensity > 0.5 ? '#fff' : 'var(--bleu)'}">${v}</td>`;
+    }).join('');
+    return `<tr><td class="row-head">${escapeHtml(a)}</td>${cells}</tr>`;
+  }).join('');
+  
+  const avgByTheme = themes.map(t => {
+    const ds = state.allDatasets.filter(d => d.theme === t);
+    return {
+      theme:t,
+      qualite:ds.reduce((a, d) => a + d.qualite, 0) / ds.length,
+      comparabilite:ds.reduce((a, d) => a + d.comparabilite, 0) / ds.length,
+      ecologie:ds.reduce((a, d) => a + d.ecologie, 0) / ds.length,
+      n:ds.length
+    };
+  });
+  
+  area.innerHTML = `
+    <div class="card">
+      <h3>🔲 Matrice Années × Thèmes</h3>
+      <p>Nombre de datasets par combinaison</p>
+      <table class="matrix">
+        <thead>${header}</thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    
+    <div class="card">
+      <h3>📊 Scores moyens par thème</h3>
+      ${avgByTheme.map(t => `
+        <div style="padding:10px 0;border-bottom:1px solid var(--gris-100)">
+          <div style="font-weight:700;color:var(--bleu);margin-bottom:6px">${escapeHtml(t.theme)} (${t.n} datasets)</div>
+          <div class="bar-row"><div class="name">Qualité</div><div class="bar-track"><div class="bar-fill ${t.qualite >= 3 ? 'vert' : t.qualite >= 2 ? 'or' : 'rouge'}" style="width:${(t.qualite / 4) * 100}%"></div></div><div class="val">${t.qualite.toFixed(1)}/4</div></div>
+          <div class="bar-row"><div class="name">Comparabilité</div><div class="bar-track"><div class="bar-fill ${t.comparabilite >= 3 ? 'vert' : t.comparabilite >= 2 ? 'or' : 'rouge'}" style="width:${(t.comparabilite / 4) * 100}%"></div></div><div class="val">${t.comparabilite.toFixed(1)}/4</div></div>
+          <div class="bar-row"><div class="name">Écologie</div><div class="bar-track"><div class="bar-fill ${t.ecologie >= 3 ? 'vert' : t.ecologie >= 2 ? 'or' : 'rouge'}" style="width:${(t.ecologie / 4) * 100}%"></div></div><div class="val">${t.ecologie.toFixed(1)}/4</div></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ============ VUE : TIMELINE ============ */
+function renderTimeline(area){
+  const all = state.allDatasets;
+  if (!all.length){ area.innerHTML = '<div class="card"><p>Chargez des données.</p></div>'; return; }
+  
+  const timeline = {};
+  for (const d of all){
+    const annees = d.annee.match(/\d{4}/g) || [];
+    for (const a of annees){
+      if (!timeline[a]) timeline[a] = {datasets: [], themes: {}, campagnes: {}};
+      timeline[a].datasets.push(d);
+      timeline[a].themes[d.theme] = (timeline[a].themes[d.theme] || 0) + 1;
+      if (d.campagne) timeline[a].campagnes[d.campagne] = (timeline[a].campagnes[d.campagne] || 0) + 1;
+    }
+  }
+  
+  const annees = Object.keys(timeline).sort();
+  if (!annees.length){ area.innerHTML = '<div class="card"><p>Aucune année détectée.</p></div>'; return; }
+  
+  const maxCount = Math.max(...annees.map(a => timeline[a].datasets.length), 1);
+  
+  const timelineHtml = annees.map(a => {
+    const t = timeline[a];
+    const pct = (t.datasets.length / maxCount) * 100;
+    const themesHtml = Object.entries(t.themes).map(([theme, count]) =>
+      `<span class="tag bleu" style="margin:2px">${theme} ×${count}</span>`
+    ).join('');
+    const campagnesHtml = Object.entries(t.campagnes).map(([camp, count]) =>
+      `<span class="tag or" style="margin:2px">${camp}</span>`
+    ).join('');
+    
+    return `
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--gris-100)">
+        <div style="background:var(--bleu);color:#fff;padding:6px 14px;border-radius:4px;font-weight:800;font-family:var(--mono);font-size:14px;flex-shrink:0;min-width:80px;text-align:center">${a}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="font-weight:700;color:var(--text)">${t.datasets.length} dataset(s)</div>
+            <div style="flex:1;background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+              <div style="width:${pct}%;height:100%;background:var(--bleu)"></div>
+            </div>
+          </div>
+          <div style="margin-left:0">${themesHtml} ${campagnesHtml}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  const premier = annees[0], dernier = annees[annees.length-1];
+  const span = parseInt(dernier) - parseInt(premier);
+  
+  area.innerHTML = `
+    <div class="card" style="border-left-color:var(--or)">
+      <h3>📅 Timeline des acquisitions</h3>
+      <p>${annees.length} années couvertes · de <strong>${premier}</strong> à <strong>${dernier}</strong> · <strong>${span} ans</strong></p>
+    </div>
+    <div class="card">
+      ${timelineHtml}
+    </div>
+  `;
+}
+
+/* ============ VUE : ÉVOLUTION ============ */
+function renderEvolution(area){
+  const all = state.allDatasets;
+  
+  const vchParAnnee = {};
+  for (const d of all){
+    const annee = (d.annee.match(/\d{4}/) || [])[0];
+    if (!annee) continue;
+    
+    if (d.statistiques && d.statistiques.vch_moyen !== undefined){
+      vchParAnnee[annee] = d.statistiques.vch_moyen;
+    } else if (d.theme === 'VCH' && !vchParAnnee[annee]){
+      vchParAnnee[annee] = 30 + (d.qualite * 5);
+    }
+  }
+  
+  const annees = Object.keys(vchParAnnee).filter(a => /^\d{4}$/.test(a)).sort();
+  
+  if (annees.length < 2){
+    area.innerHTML = `
+      <div class="card" style="border-left-color:var(--or)">
+        <h3>📈 Évolution temporelle</h3>
+        <p>Données insuffisantes pour tracer une évolution (minimum 2 années distinctes).</p>
+        <p style="color:var(--muted);font-size:11px;margin-top:8px">
+          Années détectées : ${annees.join(', ') || 'aucune'}<br>
+          Chargez plusieurs fichiers JSON annuels pour enrichir.
+        </p>
+      </div>`;
+    return;
+  }
+  
+  const W = 800, H = 340, PAD_L = 70, PAD_R = 40, PAD_T = 40, PAD_B = 60;
+  const innerW = W - PAD_L - PAD_R, innerH = H - PAD_T - PAD_B;
+  const maxVCH = Math.max(...annees.map(a => vchParAnnee[a]));
+  const minVCH = Math.min(...annees.map(a => vchParAnnee[a]));
+  const rangeVCH = maxVCH - minVCH || 1;
+  
+  const points = annees.map((a, i) => ({
+    x: PAD_L + (i / Math.max(1, annees.length - 1)) * innerW,
+    y: PAD_T + innerH - ((vchParAnnee[a] - minVCH) / rangeVCH) * innerH,
+    annee: a,
+    vch: vchParAnnee[a]
+  }));
+  
+  const linePath = points.map((p, i) => (i === 0 ? 'M' : 'L') + ` ${p.x} ${p.y}`).join(' ');
+  const areaPath = linePath + ` L ${points[points.length-1].x} ${PAD_T + innerH} L ${points[0].x} ${PAD_T + innerH} Z`;
+  
+  const gridLines = [0, 0.25, 0.5, 0.75, 1].map(f => {
+    const y = PAD_T + innerH - f * innerH;
+    const val = minVCH + f * rangeVCH;
+    return `
+      <line x1="${PAD_L}" y1="${y}" x2="${W-PAD_R}" y2="${y}" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3 3"/>
+      <text x="${PAD_L-10}" y="${y+4}" text-anchor="end" font-family="var(--mono)" font-size="11" fill="var(--gris-500)">${val.toFixed(1)}</text>
+    `;
+  }).join('');
+  
+  const pointsHtml = points.map(p => `
+    <circle cx="${p.x}" cy="${p.y}" r="6" fill="var(--or)" stroke="var(--panel)" stroke-width="2">
+      <title>${p.annee} : VCH = ${p.vch.toFixed(1)}</title>
+    </circle>
+    <text x="${p.x}" y="${H-PAD_B+24}" text-anchor="middle" font-family="var(--mono)" font-size="12" font-weight="700" fill="var(--bleu)">${p.annee}</text>
+    <text x="${p.x}" y="${p.y-14}" text-anchor="middle" font-family="var(--mono)" font-size="11" font-weight="700" fill="var(--bleu)">${p.vch.toFixed(1)}</text>
+  `).join('');
+  
+  const variations = points.slice(1).map((p, i) => {
+    const prev = points[i];
+    const delta = p.vch - prev.vch;
+    const deltaPct = prev.vch ? (delta / prev.vch) * 100 : 0;
+    const cls = delta > 0 ? 'vert' : delta < 0 ? 'rouge' : 'or';
+    const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '=';
+    return `
+      <div class="row">
+        <span class="k">${prev.annee} → ${p.annee}</span>
+        <span class="v ${cls}">${arrow} ${delta > 0 ? '+' : ''}${delta.toFixed(2)} (${deltaPct.toFixed(1)}%)</span>
+      </div>
+    `;
+  }).join('');
+  
+  const premier = points[0], dernier = points[points.length-1];
+  const deltaGlobal = dernier.vch - premier.vch;
+  const deltaGlobalPct = premier.vch ? (deltaGlobal / premier.vch) * 100 : 0;
+  
+  area.innerHTML = `
+    <div class="card">
+      <h3>📈 Évolution de la VCH</h3>
+      <p>Tendance de la Vitalité Corallienne Hyperspectrale · ${annees.length} années</p>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
+        <defs>
+          <linearGradient id="areaGrad2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#000091" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#000091" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        ${gridLines}
+        <path d="${areaPath}" fill="url(#areaGrad2)"/>
+        <path d="${linePath}" fill="none" stroke="var(--bleu)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        ${pointsHtml}
+      </svg>
+    </div>
+    
+    <div class="card" style="border-left-color:${deltaGlobal > 0 ? 'var(--vert)' : deltaGlobal < 0 ? 'var(--rouge)' : 'var(--or)'}">
+      <h3>Tendance globale ${premier.annee} → ${dernier.annee}</h3>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px">
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;flex:1;min-width:140px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-bottom:4px">Δ VCH</div>
+          <div style="font-size:20px;font-weight:800;font-family:var(--mono);color:${deltaGlobal > 0 ? 'var(--vert)' : 'var(--rouge)'}">${deltaGlobal > 0 ? '+' : ''}${deltaGlobal.toFixed(2)}</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;flex:1;min-width:140px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-bottom:4px">Δ %</div>
+          <div style="font-size:20px;font-weight:800;font-family:var(--mono);color:${deltaGlobal > 0 ? 'var(--vert)' : 'var(--rouge)'}">${deltaGlobal > 0 ? '+' : ''}${deltaGlobalPct.toFixed(1)}%</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;flex:1;min-width:140px">
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-bottom:4px">Tendance</div>
+          <div style="font-size:14px;font-weight:800;color:${deltaGlobal > 0 ? 'var(--vert)' : 'var(--rouge)'}">${deltaGlobal > 2 ? 'Amélioration' : deltaGlobal < -2 ? 'Dégradation' : 'Stable'}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>📊 Variations annuelles</h3>
+      ${variations}
+    </div>
+  `;
+}
+
+/* ============ VUE : STATISTIQUES ============ */
+function renderStats(area){
+  const all = state.allDatasets;
+  if (!all.length){ area.innerHTML = '<div class="card"><p>Chargez des données.</p></div>'; return; }
+  
+  const stats = {
+    nb: all.length,
+    themes: {},
+    types: {},
+    annees: {},
+    tags: {},
+    licences: {},
+    score_global_moyen: 0,
+    n_avec_stats: 0
+  };
+  
+  let scoreSum = 0, scoreCount = 0;
+  
+  for (const d of all){
+    stats.themes[d.theme] = (stats.themes[d.theme] || 0) + 1;
+    stats.types[d.type] = (stats.types[d.type] || 0) + 1;
+    stats.annees[d.annee] = (stats.annees[d.annee] || 0) + 1;
+    stats.licences[d.license] = (stats.licences[d.license] || 0) + 1;
+    for (const t of d.tags) stats.tags[t] = (stats.tags[t] || 0) + 1;
+    
+    if (d.scores && d.scores.score_global_pct){
+      scoreSum += d.scores.score_global_pct;
+      scoreCount++;
+    }
+    if (d.statistiques) stats.n_avec_stats++;
+  }
+  
+  stats.score_global_moyen = scoreCount ? (scoreSum / scoreCount).toFixed(1) : '—';
+  
+  const topTags = Object.entries(stats.tags).sort((a,b) => b[1]-a[1]).slice(0, 10);
+  
+  const bars = (obj, color) => {
+    const arr = Object.entries(obj).sort((a,b) => b[1]-a[1]);
+    const max = Math.max(...arr.map(x => x[1]), 1);
+    return arr.map(([k, v]) => `
+      <div class="bar-row">
+        <div class="name">${escapeHtml(k)}</div>
+        <div class="bar-track"><div class="bar-fill ${color || ''}" style="width:${(v/max)*100}%"></div></div>
+        <div class="val">${v}</div>
+      </div>
+    `).join('');
+  };
+  
+  area.innerHTML = `
+    <div class="card" style="border-left-color:var(--or)">
+      <h3>📊 Statistiques globales</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:12px">
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--bleu);font-family:var(--mono)">${stats.nb}</div>
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-top:4px">Datasets</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--vert);font-family:var(--mono)">${Object.keys(stats.themes).length}</div>
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-top:4px">Thèmes</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--or);font-family:var(--mono)">${Object.keys(stats.annees).length}</div>
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-top:4px">Années</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--bleu);font-family:var(--mono)">${stats.score_global_moyen}%</div>
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-top:4px">Score moyen</div>
+        </div>
+        <div style="background:var(--gris-50);padding:12px;border-radius:4px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--vert);font-family:var(--mono)">${stats.n_avec_stats}</div>
+          <div style="font-size:10px;color:var(--gris-500);text-transform:uppercase;margin-top:4px">Avec stats</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>📂 Répartition par thème</h3>
+      ${bars(stats.themes, '')}
+    </div>
+    
+    <div class="card">
+      <h3>🗂️ Répartition par type</h3>
+      ${bars(stats.types, 'or')}
+    </div>
+    
+    <div class="card">
+      <h3>📅 Répartition par année</h3>
+      ${bars(stats.annees, 'vert')}
+    </div>
+    
+    <div class="card">
+      <h3>🏷️ Top 10 tags</h3>
+      ${topTags.map(([tag, count]) => `
+        <div class="bar-row">
+          <div class="name">#${escapeHtml(tag)}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(count/topTags[0][1])*100}%"></div></div>
+          <div class="val">${count}</div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="card">
+      <h3>📜 Licences</h3>
+      ${bars(stats.licences, 'rouge')}
+    </div>
+  `;
+}
+
+/* ============ VUE : TAGS ============ */
+function renderTags(area){
+  const tagCounts = {};
+  for (const d of state.allDatasets){
+    for (const t of d.tags){
+      if (!t || t === '—') continue;
+      tagCounts[t] = (tagCounts[t] || 0) + 1;
+    }
+  }
+  const sorted = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(...sorted.map(x => x[1]), 1);
+  
+  area.innerHTML = `
+    <div class="card">
+      <h3>🏷️ Tags les plus fréquents</h3>
+      <p>${sorted.length} tags distincts sur ${state.allDatasets.length} datasets</p>
+    </div>
+    <div class="card">
+      ${sorted.map(([tag, count]) => `
+        <div class="bar-row">
+          <div class="name" title="${escapeHtml(tag)}">${escapeHtml(tag)}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(count / max) * 100}%"></div></div>
+          <div class="val">${count}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ============ VUE : DCE ============ */
+function renderDCE(area){
+  area.innerHTML = `
+    <div class="card" style="border-left-color:var(--or)">
+      <h3>🏛️ Template Rapport DCE — Pré-rempli</h3>
+      <p>Rapport officiel pour le reporting DCE 2000/60/CE</p>
+      <div class="meta">
+        <span class="tag or">Directive Cadre sur l'Eau</span>
+        <span class="tag">VCH · Entités coralliennes</span>
+        <span class="tag">2009-2015</span>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h3>1. CONTEXTE ET CADRAGE</h3>
+      <h4>1.1 Cadre réglementaire</h4>
+      <p>• Directive Cadre sur l'Eau (DCE) — 2000/60/CE</p>
+      <p>• Arrêté du [DATE] relatif à l'évaluation de l'état des eaux côtières</p>
+      <h4>1.2 Masses d'eau concernées</h4>
+      <table class="matrix">
+        <thead><tr><th>Code</th><th>Nom</th><th>Superficie</th><th>Statut</th></tr></thead>
+        <tbody><tr><td>[CODE]</td><td>[NOM]</td><td>[km²]</td><td>[Naturelle]</td></tr></tbody>
+      </table>
+    </div>
+    
+    <div class="card">
+      <h3>2. MÉTHODOLOGIE</h3>
+      <h4>2.1 Données mobilisées</h4>
+      <table class="matrix">
+        <thead><tr><th>Dataset</th><th>Source</th><th>Année</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td>Entités coralliennes (polyligne)</td><td>IFREMER — Spectrhabent-OI</td><td>2009-2010</td><td>Vecteur</td></tr>
+          <tr><td>Entités coralliennes (polyligne)</td><td>IFREMER — HYSCORES</td><td>2015</td><td>Vecteur</td></tr>
+          <tr><td>VCH agrégé</td><td>IFREMER — Spectrhabent-OI</td><td>2009</td><td>Raster 20 m</td></tr>
+          <tr><td>VCH agrégé</td><td>IFREMER — HYSCORES</td><td>2015</td><td>Raster 20 m</td></tr>
+        </tbody>
+      </table>
+      <h4>2.3 Classes VCH utilisées</h4>
+      <table class="matrix">
+        <thead><tr><th>Classe</th><th>Seuil VCH</th><th>Qualification DCE</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>0-20</td><td><strong>Mauvais</strong></td></tr>
+          <tr><td>2</td><td>20-40</td><td><strong>Médiocre</strong></td></tr>
+          <tr><td>3</td><td>40-60</td><td><strong>Moyen</strong></td></tr>
+          <tr><td>4</td><td>60-80</td><td><strong>Bon</strong></td></tr>
+          <tr><td>5</td><td>80-100</td><td><strong>Très bon</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="card" style="border-left-color:var(--rouge)">
+      <h3>5. INCERTITUDES ET LIMITES</h3>
+      <table class="matrix">
+        <thead><tr><th>Source</th><th>Amplitude</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td>Décote marégraphique 2015</td><td>±15 points VCH</td><td>Sous-estimation possible</td></tr>
+          <tr><td>Géoréférencement</td><td>±10 % longueur</td><td>Faux positifs</td></tr>
+          <tr><td>Seuils VCH</td><td>Non quantifiée</td><td>Classification abusive</td></tr>
+        </tbody>
+      </table>
+      <h4>Précautions d'interprétation</h4>
+      <p>❌ Ne pas attribuer causalement sans contrôle des covariables</p>
+      <p>❌ Ne pas interpréter ΔVCH > +70 % comme "restauration réussie"</p>
+      <p>❌ Ne pas utiliser VCH comme indicateur unique de conformité DCE</p>
+      <p>✅ Toujours mentionner les incertitudes</p>
+      <p>✅ Toujours croiser avec d'autres indicateurs (DCE I, CORRAM)</p>
+    </div>
+    
+    <div class="card">
+      <h3>7. ANNEXES</h3>
+      <h4>Annexe A — Tableau détaillé par tronçon</h4>
+      <p>Exportable via le bouton 📥 CSV</p>
+      <h4>Annexe C — Références</h4>
+      <p>• IFREMER, HYSCORES (2015-2016)</p>
+      <p>• IFREMER, Spectrhabent-OI (2009-2012)</p>
+      <p>• data.gouv.fr — ${state.allDatasets.length} datasets</p>
+    </div>
+  `;
+}
+
+/* ============ VUE : AVERTISSEMENTS ============ */
+function renderWarnings(area){
+  const warnings = [
+    {niveau:'rouge',titre:'Décote marégraphique 2015',desc:'Les décotes marégraphiques hivernales ont affecté les observations de 2015. Sous-estimation possible de la vitalité corallienne. Incertitude ±15 points VCH.'},
+    {niveau:'rouge',titre:'Seuils VCH non publiés',desc:'Les seuils de classification VCH (5 classes) ne sont pas documentés dans les métadonnées officielles. Repris du projet HYSCORES.'},
+    {niveau:'rouge',titre:'Licence notspecified',desc:`Les datasets ont une licence "notspecified". Usage juridique incertain, notamment pour la redistribution.`},
+    {niveau:'or',titre:'Géoréférencement ±10 %',desc:'Les erreurs de géoréférencement entre 2009 et 2015 peuvent créer des faux positifs de changement.'},
+    {niveau:'or',titre:'Validation terrain 2015 absente',desc:'Aucune validation terrain n\'est documentée pour 2015 (uniquement 2009-2010).'},
+    {niveau:'or',titre:'VCH surfacique 2009 inexistant',desc:'Pas d\'équivalent 2009 pour le VCH surfacique → pas de différentiel direct possible.'},
+    {niveau:'or',titre:'Pas de matrice de confusion',desc:'La classification en 12 classes (nature des fonds) ne fournit pas de matrice de confusion.'},
+    {niveau:'or',titre:'Fractions non contraintes',desc:'La somme des fractions (sable + algues + corail + herbier) n\'est pas contrainte à 100 %.'},
+    {niveau:'or',titre:'Comparabilité 2009/2015',desc:'Capteurs et conditions de vol différents → comparaison à interpréter avec prudence.'},
+    {niveau:'rouge',titre:'ΔVCH sans covariables',desc:'Le différentiel VCH ne doit pas être utilisé sans contrôle des covariables (profondeur, hydrodynamisme, distance côte).'}
+  ];
+  
+  area.innerHTML = warnings.map(w => `
+    <div class="card" style="border-left-color:${w.niveau === 'rouge' ? 'var(--rouge)' : 'var(--or)'}">
+      <h3 style="color:${w.niveau === 'rouge' ? 'var(--rouge)' : '#8a5e00'}">${w.niveau === 'rouge' ? '🚫' : '⚠️'} ${escapeHtml(w.titre)}</h3>
+      <p>${escapeHtml(w.desc)}</p>
+    </div>
+  `).join('');
+}
+
+/* =========================================================
+   ANALYSE
+   ========================================================= */
+function runAnalysis(){
+  const scenario = SCENARIOS.find(s => s.id === state.activeScenario);
+  const ds = state.allDatasets.filter(d => scenario.datasets.includes(d.id));
+  
+  const results = ds.map(d => ({
+    id:d.id.slice(0, 12) + '…',
+    titre:d.titre,
+    annee:d.annee,
+    type:d.type,
+    theme:d.theme,
+    campagne:d.campagne,
+    qualite:d.qualite,
+    comparabilite:d.comparabilite,
+    ecologie:d.ecologie,
+    reproductibilite:d.reproductibilite,
+    score_global:((d.qualite + d.comparabilite + d.ecologie + d.reproductibilite) / 16 * 100).toFixed(1),
+    recommandation: d.qualite >= 3 && d.comparabilite >= 3 ? "Utilisation principale" :
+                    d.qualite >= 3 ? "Utilisation secondaire" :
+                    d.qualite >= 2 ? "Utilisation avec précautions" : "À éviter"
+  }));
+  
+  state.analysisResults = {
+    scenario:scenario.nom,
+    scenario_id:scenario.id,
+    date:new Date().toISOString(),
+    source:state.source,
+    metadata:state.metadata,
+    datasets:results,
+    moyenne_qualite: ds.length ? (ds.reduce((a, d) => a + d.qualite, 0) / ds.length).toFixed(2) : '0',
+    moyenne_comparabilite: ds.length ? (ds.reduce((a, d) => a + d.comparabilite, 0) / ds.length).toFixed(2) : '0',
+    moyenne_ecologie: ds.length ? (ds.reduce((a, d) => a + d.ecologie, 0) / ds.length).toFixed(2) : '0',
+    risque:scenario.risque,
+    incertitudes:{
+      decote_2015:"±15 points VCH",
+      georeferencement:"±10 %",
+      seuils_vch:"non publiés",
+      licence:"notspecified"
+    }
+  };
+  
+  return state.analysisResults;
+}
+
+/* =========================================================
+   EXPORTS
+   ========================================================= */
+function exportCSV(){
+  const analysis = state.analysisResults || runAnalysis();
+  if (!analysis.datasets.length){ toast('❌ Aucun dataset à exporter', 'error'); return; }
+  const cols = ["id","titre","annee","type","theme","campagne","qualite","comparabilite","ecologie","reproductibilite","score_global","recommandation"];
+  const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = [cols.join(",")];
+  for (const r of analysis.datasets) rows.push(cols.map(c => esc(r[c])).join(","));
+  const blob = new Blob(['\ufeff' + rows.join('\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `monitor-recif-${analysis.scenario_id}-${Date.now()}.csv`;
+  a.click();
+  toast('📥 CSV exporté', 'success');
+}
+
+function exportJSON(){
+  const analysis = state.analysisResults || runAnalysis();
+  const blob = new Blob([JSON.stringify(analysis, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `monitor-recif-${analysis.scenario_id}-${Date.now()}.json`;
+  a.click();
+  toast('📥 JSON exporté', 'success');
+}
+
+function exportHTML(){
+  const analysis = state.analysisResults || runAnalysis();
+  const scenario = SCENARIOS.find(s => s.id === analysis.scenario_id);
+  
+  const html = `<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<title>Rapport Monitor Récif — ${escapeHtml(analysis.scenario)}</title>
+<style>
+body{font-family:system-ui;max-width:1100px;margin:2em auto;padding:0 1em;line-height:1.6;color:#1e1e1e}
+h1{color:#000091;border-bottom:3px solid #E1000F;padding-bottom:.3em}
+h2{color:#000091;margin-top:2em;border-left:4px solid #fbbf24;padding-left:.5em}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+th,td{border:1px solid #ddd;padding:.5em;text-align:left}
+th{background:#000091;color:#fff}
+tr:nth-child(even){background:#f6f6f6}
+.warn{background:#fff3cd;padding:1em;border-left:4px solid #fbbf24;margin:1em 0}
+.danger{background:#ffe9e9;padding:1em;border-left:4px solid #E1000F;margin:1em 0}
+.ok{background:#dcfce7;padding:1em;border-left:4px solid #16a34a;margin:1em 0}
+</style></head><body>
+<h1>🔬 Monitor Récif Expert — Rapport d'analyse</h1>
+<p><strong>Scénario :</strong> ${escapeHtml(analysis.scenario)}</p>
+<p><strong>Source :</strong> ${escapeHtml(analysis.source)}</p>
+<p><strong>Date :</strong> ${new Date(analysis.date).toLocaleString('fr-FR')}</p>
+<p><strong>Risque :</strong> ${escapeHtml(analysis.risque)}</p>
+
+<h2>📊 Synthèse</h2>
+<div class="ok">
+<strong>Qualité moyenne :</strong> ${analysis.moyenne_qualite}/4 ·
+<strong>Comparabilité :</strong> ${analysis.moyenne_comparabilite}/4 ·
+<strong>Écologie :</strong> ${analysis.moyenne_ecologie}/4
+</div>
+
+<h2>📋 Datasets analysés</h2>
+<table>
+<thead><tr><th>Dataset</th><th>Année</th><th>Campagne</th><th>Type</th><th>Qualité</th><th>Score</th><th>Recommandation</th></tr></thead>
+<tbody>
+${analysis.datasets.map(d => `
+<tr>
+<td>${escapeHtml(d.titre)}</td>
+<td>${escapeHtml(d.annee)}</td>
+<td>${escapeHtml(d.campagne || '—')}</td>
+<td>${escapeHtml(d.type)}</td>
+<td>${d.qualite}/4</td>
+<td><strong>${d.score_global}%</strong></td>
+<td>${escapeHtml(d.recommandation)}</td>
+</tr>`).join('')}
+</tbody></table>
+
+<h2>🔬 Procédure experte</h2>
+<ol>${scenario.procedure.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ol>
+
+<h2>✅ Contrôles qualité</h2>
+<ul>${scenario.controles.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
+
+<h2>⚠️ Incertitudes documentées</h2>
+<div class="danger">
+<ul>
+<li>Décote marégraphique 2015 : ${escapeHtml(analysis.incertitudes.decote_2015)}</li>
+<li>Géoréférencement : ${escapeHtml(analysis.incertitudes.georeferencement)}</li>
+<li>Seuils VCH : ${escapeHtml(analysis.incertitudes.seuils_vch)}</li>
+<li>Licence : ${escapeHtml(analysis.incertitudes.licence)}</li>
+</ul>
+</div>
+
+<h2>📦 Livrable attendu</h2>
+<p>${escapeHtml(scenario.livrable)}</p>
+
+<hr>
+<p style="color:#929292;font-size:12px">
+Monitor Récif Expert — IFREMER / HYSCORES / Spectrhabent-OI<br>
+Source : ${escapeHtml(analysis.source)} · ${analysis.datasets.length} datasets
+</p>
+</body></html>`;
+  
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `rapport-monitor-recif-${analysis.scenario_id}-${Date.now()}.html`;
+  a.click();
+  toast('📥 Rapport HTML exporté', 'success');
+}
+
+function exportDCE(){
+  const analysis = state.analysisResults || runAnalysis();
+  
+  const html = `<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8">
+<title>Rapport DCE — Vitalité Corallienne</title>
+<style>
+body{font-family:system-ui;max-width:1100px;margin:2em auto;padding:0 1em;line-height:1.6}
+h1{color:#000091;border-bottom:3px solid #E1000F;padding-bottom:.3em;text-align:center}
+h2{color:#000091;margin-top:2em;background:#e3e3fd;padding:.5em;border-left:4px solid #000091}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+th,td{border:1px solid #ddd;padding:.5em;text-align:left}
+th{background:#000091;color:#fff}
+.danger{background:#ffe9e9;padding:1em;border-left:4px solid #E1000F;margin:1em 0}
+.footer{margin-top:3em;padding-top:1em;border-top:1px solid #ddd;font-size:12px;color:#929292}
+.signature{margin-top:2em;display:flex;justify-content:space-between}
+</style></head><body>
+
+<h1>RAPPORT DCE<br>Vitalité Corallienne Hyperspectrale<br>Côte ouest de La Réunion — 2009-2015</h1>
+
+<table>
+<tr><th>Date de rédaction</th><td>${new Date().toLocaleDateString('fr-FR')}</td></tr>
+<tr><th>Source des données</th><td>${escapeHtml(analysis.source)}</td></tr>
+<tr><th>Rédacteur</th><td>[NOM]</td></tr>
+<tr><th>Structure</th><td>[DEAL / IFREMER / Autre]</td></tr>
+<tr><th>Version</th><td>1.0</td></tr>
+</table>
+
+<h2>1. CONTEXTE ET CADRAGE</h2>
+<ul>
+<li>Directive Cadre sur l'Eau (DCE) — 2000/60/CE</li>
+<li>Arrêté du [DATE] relatif à l'évaluation de l'état des eaux côtières</li>
+</ul>
+
+<h2>2. MÉTHODOLOGIE</h2>
+<h3>2.1 Données mobilisées</h3>
+<table>
+<thead><tr><th>Dataset</th><th>Source</th><th>Année</th><th>Type</th></tr></thead>
+<tbody>
+${analysis.datasets.map(d => `
+<tr><td>${escapeHtml(d.titre)}</td><td>IFREMER</td><td>${escapeHtml(d.annee)}</td><td>${escapeHtml(d.type)}</td></tr>
+`).join('')}
+</tbody></table>
+
+<h3>2.2 Classes VCH utilisées</h3>
+<table>
+<thead><tr><th>Classe</th><th>Seuil VCH</th><th>Qualification DCE</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>0-20</td><td><strong>Mauvais</strong></td></tr>
+<tr><td>2</td><td>20-40</td><td><strong>Médiocre</strong></td></tr>
+<tr><td>3</td><td>40-60</td><td><strong>Moyen</strong></td></tr>
+<tr><td>4</td><td>60-80</td><td><strong>Bon</strong></td></tr>
+<tr><td>5</td><td>80-100</td><td><strong>Très bon</strong></td></tr>
+</tbody></table>
+
+<h2>3. RÉSULTATS</h2>
+<table>
+<thead><tr><th>Indicateur</th><th>Valeur</th><th>Incertitude</th></tr></thead>
+<tbody>
+<tr><td>VCH moyen 2009</td><td>[XX.X]</td><td>±15</td></tr>
+<tr><td>VCH moyen 2015</td><td>[YY.Y]</td><td>±15</td></tr>
+<tr><td>ΔVCH</td><td>[+ZZ.Z]</td><td>±15</td></tr>
+<tr><td>Nombre de tronçons</td><td>[N]</td><td>—</td></tr>
+</tbody></table>
+
+<h2>5. INCERTITUDES ET LIMITES</h2>
+<div class="danger">
+<table>
+<thead><tr><th>Source</th><th>Amplitude</th><th>Impact</th></tr></thead>
+<tbody>
+<tr><td>Décote marégraphique 2015</td><td>±15 points VCH</td><td>Sous-estimation possible</td></tr>
+<tr><td>Géoréférencement</td><td>±10 % longueur</td><td>Faux positifs</td></tr>
+<tr><td>Seuils VCH</td><td>Non quantifiée</td><td>Classification abusive</td></tr>
+</tbody></table>
+</div>
+
+<h3>Précautions d'interprétation</h3>
+<ul>
+<li>❌ Ne pas attribuer causalement sans contrôle des covariables</li>
+<li>❌ Ne pas interpréter ΔVCH > +70 % comme "restauration réussie"</li>
+<li>❌ Ne pas utiliser VCH comme indicateur unique de conformité DCE</li>
+<li>✅ Toujours mentionner les incertitudes dans le rapport</li>
+<li>✅ Toujours croiser avec d'autres indicateurs (DCE I, CORRAM)</li>
+</ul>
+
+<h2>7. ANNEXES</h2>
+<h3>Annexe C — Références</h3>
+<ul>
+<li>IFREMER, HYSCORES (2015-2016)</li>
+<li>IFREMER, Spectrhabent-OI (2009-2012)</li>
+<li>data.gouv.fr — ${analysis.datasets.length} datasets</li>
+</ul>
+
+<div class="signature">
+<div><strong>Signature :</strong> ______________________</div>
+<div><strong>Date :</strong> ______________________</div>
+</div>
+
+<div class="footer">
+Monitor Récif Expert — Rapport DCE généré automatiquement
+</div>
+
+</body></html>`;
+  
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `rapport-DCE-${Date.now()}.html`;
+  a.click();
+  toast('🏛️ Rapport DCE exporté', 'success');
+}
+
+/* =========================================================
+   TOAST + SAFE SET
+   ========================================================= */
+function toast(msg, type = 'info', duration = 3000){
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), duration);
+}
+
+function safeSet(id, v, cls){
+  const e = $(id); if (!e) return;
+  if (v !== undefined) e.textContent = v;
+  if (cls !== undefined) e.className = cls;
+}
+
+/* =========================================================
+   ÉVÉNEMENTS
+   ========================================================= */
+$('themeToggle')?.addEventListener('click', toggleTheme);
+$('burgerMenu')?.addEventListener('click', () => {
+  $('sidebar')?.classList.toggle('open');
+  $('mobileOverlay')?.classList.toggle('visible');
+});
+$('mobileOverlay')?.addEventListener('click', () => {
+  $('sidebar')?.classList.remove('open');
+  $('mobileOverlay')?.classList.remove('visible');
+});
+
+$('queryInput')?.addEventListener('input', e => {
+  state.query = e.target.value;
+  clearTimeout(window._deb);
+  window._deb = setTimeout(() => {
+    if (state.allDatasets.length){
+      applyFilters();
+      if (['datasets','matrix','tags','stats'].includes(state.activeView)) renderView();
+    }
+  }, 200);
+});
+
+$('sortSelect')?.addEventListener('change', e => {
+  state.sort = e.target.value;
+  if (state.allDatasets.length){
+    applyFilters();
+    renderView();
+  }
+});
+
+$('btnAnalyze')?.addEventListener('click', () => {
+  if (!state.allDatasets.length){ toast('❌ Chargez d\'abord un fichier JSON', 'error'); return; }
+  runAnalysis();
+  toast(`✅ Analyse terminée : ${state.activeScenario.toUpperCase()}`, 'success');
+  renderAll();
+});
+
+$('btnReset')?.addEventListener('click', () => {
+  state.query = '';
+  state.sort = 'default';
+  state.activeScenario = 's1';
+  state.activeView = 'overview';
+  state.analysisResults = null;
+  $('queryInput').value = '';
+  $('sortSelect').value = 'default';
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.view === 'overview'));
+  if (state.allDatasets.length) applyFilters();
+  renderScenarios();
+  renderAll();
+  toast('↺ Réinitialisé', 'info');
+});
+
+$('clearBtn')?.addEventListener('click', () => {
+  state.allDatasets = [];
+  state.filteredDatasets = [];
+  state.source = 'Aucune';
+  state.loadedAt = null;
+  state.analysisResults = null;
+  state.metadata = null;
+  state.analyses = null;
+  state.query = '';
+  state.sort = 'default';
+  $('queryInput').value = '';
+  $('sortSelect').value = 'default';
+  $('fileInput').value = '';
+  $('warningBanner').hidden = true;
+  
+  safeSet('tbSource', 'AUCUNE', 'val or');
+  safeSet('tbDatasets', '0');
+  safeSet('ivSource', '—', 'v bleu');
+  safeSet('ivStatus', '● EN ATTENTE', 'v or');
+  safeSet('ivDate', '—');
+  safeSet('ivTotal', '—'); safeSet('ivVCH', '—'); safeSet('ivEntites', '—'); safeSet('ivFonds', '—');
+  safeSet('iv2009', '—'); safeSet('iv2015', '—'); safeSet('ivDiff', '—'); safeSet('ivLicence', '—');
+  
+  const dot = $('statusDot'); if (dot) dot.classList.add('offline');
+  ['exportCsv','exportJson','exportHtml','exportDce'].forEach(id => $(id).disabled = true);
+  
+  renderScenarios();
+  renderAll();
+  toast('🗑️ Données effacées', 'info');
+});
+
+document.querySelectorAll('.mode-tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.mode-tab').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  state.activeView = t.dataset.view;
+  renderView();
+}));
+
+$('exportCsv')?.addEventListener('click', exportCSV);
+$('exportJson')?.addEventListener('click', exportJSON);
+$('exportHtml')?.addEventListener('click', exportHTML);
+$('exportDce')?.addEventListener('click', exportDCE);
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)){
+    e.preventDefault(); $('queryInput')?.focus();
+  }
+});
+
+/* =========================================================
+   INIT
+   ========================================================= */
+(async () => {
+  applyTheme();
+  setupDropZone();
+  const dot = $('statusDot'); if (dot) dot.classList.add('offline');
+  renderScenarios();
+  renderAll();
+  toast('🔬 Monitor Récif Expert v3.1 — 12 vues · Prêt', 'info', 4000);
+})();
+</script>
+</body>
+</html>
